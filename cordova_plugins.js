@@ -319,6 +319,21 @@ module.exports = [
             "cordova.plugins.notification.local.core",
             "plugin.notification.local.core"
         ]
+    },
+    {
+        "file": "plugins/ionic-plugin-deeplinks/www/deeplink.js",
+        "id": "ionic-plugin-deeplinks.deeplink",
+        "pluginId": "ionic-plugin-deeplinks",
+        "clobbers": [
+            "IonicDeeplink"
+        ],
+        "runs": true
+    },
+    {
+        "file": "plugins/ionic-plugin-deeplinks/src/browser/DeeplinkProxy.js",
+        "id": "ionic-plugin-deeplinks.IonicDeeplinkProxy",
+        "pluginId": "ionic-plugin-deeplinks",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -336,7 +351,8 @@ module.exports.metadata =
     "cordova-plugin-facebook4": "1.7.4",
     "cordova-plugin-badge": "0.8.7",
     "cordova-plugin-local-notification": "0.9.0-beta.2",
-    "cordova-android-support-gradle-release": "1.4.4"
+    "cordova-android-support-gradle-release": "1.4.4",
+    "ionic-plugin-deeplinks": "1.0.17"
 }
 // BOTTOM OF METADATA
 });

@@ -81572,6 +81572,73 @@ page-login .button p {
   font-size: 1.45rem;
 }
 
+page-notificacoes ion-content {
+  background: linear-gradient(316deg, #19388d, #1d3fb1, #461c8a, #871db8, #dd00f3, #dd00f3);
+  background-size: 250% 250%;
+  -webkit-animation: bgtransition 30s linear infinite;
+  animation: bgtransition 30s linear infinite;
+  color: #fff !important;
+}
+
+page-notificacoes .toolbar button {
+  color: #fff;
+}
+
+@keyframes bgtransition {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+page-notificacoes h1 {
+  font-weight: bold;
+  font-size: 3rem;
+}
+
+page-notificacoes .flex-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 65vh;
+}
+
+page-notificacoes .signup-form {
+  width: 90%;
+}
+
+page-notificacoes .signup-form strong {
+  font-size: 1.8rem;
+}
+
+page-notificacoes .signup-form p {
+  font-weight: bold;
+  margin: 2px 0 0 0;
+}
+
+page-home ion-card-content {
+  text-overflow: '...';
+}
+
 page-home ion-col {
   max-width: 300px;
   position: relative;
