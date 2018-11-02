@@ -3541,7 +3541,6 @@ var HomePage = (function () {
                         {
                             text: 'OK',
                             handler: function () {
-                                _this.navCtrl.setRoot(HomePage_1);
                                 _this.geolocaliza();
                             }
                         }
