@@ -3277,25 +3277,6 @@ var HomePage = (function () {
         };
         this.myElement = null;
         this.zukeModal = null;
-        this.platform.ready().then(function () {
-            deeplinks.routeWithNavController(_this.navCtrl, {
-                '/welcome': __WEBPACK_IMPORTED_MODULE_11__welcome_welcome__["a" /* WelcomePage */],
-                '/home': HomePage_1,
-                '/chats': __WEBPACK_IMPORTED_MODULE_10__chat_chat__["a" /* ChatPage */],
-                '/perfil': __WEBPACK_IMPORTED_MODULE_21__perfil_perfil__["a" /* PerfilPage */],
-                '/spotted': __WEBPACK_IMPORTED_MODULE_18__spotted_spotted__["a" /* SpottedPage */],
-                '/spotted-detalhes': __WEBPACK_IMPORTED_MODULE_19__spotted_detalhes_spotted_detalhes__["a" /* SpottedDetalhesPage */]
-            }).subscribe(function (match) {
-                // match.$route - the route we matched, which is the matched entry from the arguments to route()
-                // match.$args - the args passed in the link
-                // match.$link - the full link data
-                match.$link = { url: "http://localhost:8001/home/" + _this.chave, path: "/home/" + _this.chave, host: "localhost", fragment: "" };
-                console.log('Native route', match.$route, match.$args, match.$link);
-            }, function (nomatch) {
-                // nomatch.$link - the full link data
-                console.log('Got a deeplink that didn\'t match', nomatch);
-            });
-        });
         this.plataforma = platform.is('android');
         this.storyService.getFeed();
         var onclickObservable = this.localNotifications.on("click");
