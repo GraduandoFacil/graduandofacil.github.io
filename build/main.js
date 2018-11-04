@@ -1,6 +1,6 @@
 webpackJsonp([0],{
 
-/***/ 100:
+/***/ 101:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -72,325 +72,6 @@ var PerfilPage = (function () {
 
 /***/ }),
 
-/***/ 103:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WelcomePage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__stories_list_stories_list__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__providers_user_user_service__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__story_photo_story_photo__ = __webpack_require__(156);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__signup_signup__ = __webpack_require__(423);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__home_home__ = __webpack_require__(54);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__clienteLogin_clientelogin__ = __webpack_require__(424);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_auth_auth_service__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_forms__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_facebook__ = __webpack_require__(425);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-
-
-
-
-
-var WelcomePage = (function () {
-    function WelcomePage(loadingCtrl, app, userService, fb, navCtrl, navParams, alertCtrl, authService, formBuilder) {
-        var _this = this;
-        this.loadingCtrl = loadingCtrl;
-        this.app = app;
-        this.userService = userService;
-        this.fb = fb;
-        this.navCtrl = navCtrl;
-        this.navParams = navParams;
-        this.alertCtrl = alertCtrl;
-        this.authService = authService;
-        this.formBuilder = formBuilder;
-        this.isLoggedIn = false;
-        // Gradient logic from https://codepen.io/quasimondo/pen/lDdrF
-        // NOTE: I'm not using this logic anymore, but if you want to use somehow, somewhere,
-        // A programmatically way to make a nice rainbow effect, there you go.
-        // NOTE: It probably won't work because it will crash your phone as this method is heavy \o/
-        this.colors = new Array([62, 35, 255], [11, 57, 66], [255, 35, 98], [45, 175, 230], [255, 0, 255], [255, 128, 0]);
-        this.step = 0;
-        // color table indices for:
-        // [current color left,next color left,current color right,next color right]
-        this.colorIndices = [0, 1, 2, 3];
-        // transition speed
-        this.gradientSpeed = 0.00005;
-        this.gradient = '';
-        //FACEBOOK MÉTODO DE VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
-        fb.getLoginStatus()
-            .then(function (res) {
-            ////console.log(res.status);
-            if (res.status === "connect") {
-                _this.isLoggedIn = true;
-            }
-            else {
-                _this.isLoggedIn = false;
-            }
-        })
-            .catch(function (e) { return console.log(e); });
-        var emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        this.signinForm = this.formBuilder.group({
-            email: ['', [__WEBPACK_IMPORTED_MODULE_9__angular_forms__["f" /* Validators */].compose([__WEBPACK_IMPORTED_MODULE_9__angular_forms__["f" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_9__angular_forms__["f" /* Validators */].pattern(emailRegex)])]],
-            password: ['', [__WEBPACK_IMPORTED_MODULE_9__angular_forms__["f" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_9__angular_forms__["f" /* Validators */].minLength(8)]]
-        });
-    }
-    WelcomePage.prototype.loginFace = function () {
-        var _this = this;
-        var loading = this.loadingCtrl.create({
-            duration: 50
-        });
-        loading.onDidDismiss(function () {
-            //      this.fb.login(['user_likes','public_profile', 'user_friends', 'email','user_friends','user_gender','user_posts','user_birthday','user_events'])
-            _this.fb.login(['public_profile', 'email'])
-                .then(function (res) {
-                if (res.status === "connected") {
-                    _this.isLoggedIn = true;
-                    _this.getUserDetail(res.authResponse.userID);
-                }
-                else {
-                    _this.isLoggedIn = false;
-                }
-            })
-                .catch(function (e) {
-                alert(e);
-                //console.log('Error logging into Facebook', e)
-            });
-        });
-        loading.present();
-    };
-    WelcomePage.prototype.logout = function () {
-        var _this = this;
-        this.fb.logout()
-            .then(function (res) { return _this.isLoggedIn = false; })
-            .catch(function (e) { return console.log('Error logout from Facebook', e); });
-    };
-    WelcomePage.prototype.getUserDetail = function (userid) {
-        var _this = this;
-        var loading2 = this.loadingCtrl.create({
-            duration: 50
-        });
-        //    this.fb.api("/"+userid+"/?fields=id,email,relationship_status,name,picture.width(320).height(320).as(picture_large),gender",["public_profile"])
-        this.fb.api("/" + userid + "/?fields=id,email,name,picture.width(320).height(320).as(picture_large),gender", ["public_profile"])
-            .then(function (res) {
-            //console.log(res);
-            var formUser = res;
-            var email = res.email;
-            formUser.photo = res.picture_large.data.url;
-            formUser.distance = 100;
-            formUser.username = res.email;
-            formUser.timestampConcordou = Math.floor(Date.now() / 1000);
-            delete formUser.picture_large;
-            _this.userService.emailExists(email).first().subscribe(function (userExists) {
-                if (userExists) {
-                    _this.authService.signinWithEmail({ email: res.email, password: res.id }).then(function (isLogged) {
-                        if (isLogged) {
-                            _this.isLoggedSpottedIn = true;
-                            _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */]);
-                        }
-                    }).catch(function (e) {
-                        _this.isLoggedSpottedIn = false;
-                    });
-                }
-                else {
-                    var alert_1 = _this.alertCtrl.create({
-                        title: 'Confirmar cadastro',
-                        message: '<p>Você aceita os termos de uso?</p>',
-                        buttons: [
-                            {
-                                text: 'Sim',
-                                handler: function () {
-                                    var alert2 = _this.alertCtrl.create({
-                                        title: 'Complete o cadastro',
-                                        inputs: [
-                                            {
-                                                name: 'faculdade',
-                                                placeholder: 'Digite sua universidade'
-                                            },
-                                            {
-                                                name: 'curso',
-                                                placeholder: 'Digite o curso'
-                                            }
-                                        ],
-                                        buttons: [
-                                            {
-                                                text: 'Enviar',
-                                                handler: function (data) {
-                                                    formUser.curso = data.curso;
-                                                    formUser.faculdade = data.faculdade;
-                                                    var loading = _this.showLoading();
-                                                    _this.authService.createAuthUser({
-                                                        email: formUser.email,
-                                                        password: formUser.id
-                                                    }).then(function (authState) {
-                                                        delete formUser.id;
-                                                        var uuid = authState.auth.uid;
-                                                        _this.userService.create(formUser, uuid).then(function () {
-                                                            //console.log('usuario cadastrado');
-                                                            loading.dismiss();
-                                                            _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */]);
-                                                        }).catch(function (error) {
-                                                            //console.log(error);
-                                                            _this.showAlert("Erro no cadastro");
-                                                        }).catch(function (error) {
-                                                            _this.showAlert("Erro no cadastro");
-                                                            //console.log(error);
-                                                            //   this.showAlert(error);
-                                                        });
-                                                    });
-                                                }
-                                            }
-                                        ]
-                                    });
-                                    alert2.present();
-                                }
-                            },
-                            {
-                                text: 'Não',
-                                role: 'cancel',
-                                handler: function () {
-                                    console.log('Cancel clicked');
-                                }
-                            }, {
-                                text: 'Ver termos',
-                                handler: function () {
-                                    _this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_0__stories_list_stories_list__["a" /* StoriesListPage */]);
-                                }
-                            }
-                        ]
-                    });
-                    alert_1.present();
-                }
-            });
-            _this.users = res;
-        })
-            .catch(function (e) {
-            //console.log(e);
-        });
-        loading2.present();
-    };
-    WelcomePage.prototype.onSubmit = function () {
-        var _this = this;
-        var loading = this.showLoading();
-        this.authService.signinWithEmail(this.signinForm.value).then(function (isLogged) {
-            if (isLogged) {
-                _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */]);
-                loading.dismiss();
-            }
-        }).catch(function (error) {
-            loading.dismiss();
-            _this.showAlert(error);
-        });
-    };
-    WelcomePage.prototype.onHomePage = function () {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */]).then(function (hasAccess) {
-            //console.log('Autorizado : ', hasAccess);
-        }).catch(function (err) {
-            //console.log('Não Autorizado : ', err);
-        });
-    };
-    WelcomePage.prototype.onLogout = function () {
-        this.authService.logout();
-    };
-    WelcomePage.prototype.showAlert = function (message) {
-        this.alertCtrl.create({
-            message: message,
-            buttons: ['OK']
-        }).present();
-    };
-    WelcomePage.prototype.showLoading = function () {
-        var loading = this.loadingCtrl.create({
-            content: 'Carregando...'
-        });
-        loading.present();
-        return loading;
-    };
-    WelcomePage.prototype.ionViewDidLoad = function () {
-        this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */]).then(function (hasAccess) {
-            console.log('Autorizado : ', hasAccess);
-        }).catch(function (err) {
-            console.log('Não Autorizado : ', err);
-        });
-    };
-    WelcomePage.prototype.updateGradient = function () {
-        var _this = this;
-        var c00 = this.colors[this.colorIndices[0]];
-        var c01 = this.colors[this.colorIndices[1]];
-        var c10 = this.colors[this.colorIndices[2]];
-        var c11 = this.colors[this.colorIndices[3]];
-        var istep = 1 - this.step;
-        var r1 = Math.round(istep * c00[0] + this.step * c01[0]);
-        var g1 = Math.round(istep * c00[1] + this.step * c01[1]);
-        var b1 = Math.round(istep * c00[2] + this.step * c01[2]);
-        var color1 = 'rgb(' + r1 + ',' + g1 + ',' + b1 + ')';
-        var r2 = Math.round(istep * c10[0] + this.step * c11[0]);
-        var g2 = Math.round(istep * c10[1] + this.step * c11[1]);
-        var b2 = Math.round(istep * c10[2] + this.step * c11[2]);
-        var color2 = 'rgb(' + r2 + ',' + g2 + ',' + b2 + ')';
-        this.gradient = "-webkit-gradient(linear, left top, right bottom, from(" + color1 + "), to(" + color2 + "))";
-        this.step += this.gradientSpeed;
-        if (this.step >= 1) {
-            this.step %= 1;
-            this.colorIndices[0] = this.colorIndices[1];
-            this.colorIndices[2] = this.colorIndices[3];
-            // pick two new target color indices
-            // do not pick the same as the current one
-            this.colorIndices[1] =
-                (this.colorIndices[1] + Math.floor(1 + Math.random() * (this.colors.length - 1)))
-                    % this.colors.length;
-            this.colorIndices[3] =
-                (this.colorIndices[3] + Math.floor(1 + Math.random() * (this.colors.length - 1)))
-                    % this.colors.length;
-        }
-        setInterval(function () { _this.updateGradient(); }, 10);
-    };
-    WelcomePage.prototype.irCliente = function () {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_5__clienteLogin_clientelogin__["a" /* ClienteLoginPage */]);
-    };
-    WelcomePage.prototype.irCadastro = function () {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_3__signup_signup__["a" /* SignupPage */]);
-    };
-    WelcomePage.prototype.testarPhoto = function () {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__story_photo_story_photo__["a" /* StoryPhotoPage */]);
-    };
-    WelcomePage.prototype.irHome = function () {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */]);
-    };
-    WelcomePage = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_6__angular_core__["n" /* Component */])({
-            selector: 'page-welcome',template:/*ion-inline-start:"C:\Users\Samsung\Documents\AlunoAmigo\b12\src\pages\welcome\welcome.html"*/'<ion-content padding class="transparent-header">\n\n    <ion-header>\n\n      <ion-navbar>\n\n      </ion-navbar>\n\n    </ion-header>\n\n    <img class="logo" src="assets/img/logo/spotted3.png" />\n\n    \n\n    <div padding>\n\n        <form [formGroup]="signinForm" (ngSubmit) = "onSubmit(); $event.preventDefault()">\n\n            <div class="flex-container">\n\n              <div class="login-form animated fadeInRight">\n\n                <ion-item margin-bottom class="input-login">\n\n                  <ion-input  placeholder="Email" type="text" formControlName = "email"></ion-input>\n\n                </ion-item>\n\n                <ion-item class="input-login">\n\n                  <ion-input  placeholder="Senha" type="password" formControlName = "password"></ion-input>\n\n                </ion-item>\n\n              </div>\n\n          \n\n                    <button ion-button block outline class="login-button"  type = "submit" [disabled]="signinForm.invalid"  color="light" class="login-button">Entrar</button>\n\n            </div>\n\n           \n\n          \n\n          \n\n          \n\n          </form>\n\n          \n\n          \n\n      <button ion-button block outline (click)="irHome()" color="light" class="login-button">Página Inicial</button>\n\n\n\n    </div>\n\n    <div class="strike">\n\n      <span>OU</span>\n\n    </div>\n\n    <button ion-button block clear (click)="loginFace()" color="light" class="login-button"><ion-icon name="logo-facebook"></ion-icon> Login com Facebook</button>\n\n\n\n<!--    <div *ngIf="isLoggedIn; else facebookLogin">\n\n      <h2>Hi, {{users.name}} ({{users.email}})</h2>\n\n      <p>\n\n        Gender: {{users.gender}}\n\n      </p>\n\n      <p>\n\n        <img src="{{users.picture.data.url}}" width="100" alt="{{users.name}}" />\n\n      </p>\n\n      <p>\n\n        <button ion-button icon-right (click)="logout()">\n\n          Logout\n\n        </button>\n\n      </p>\n\n    </div>\n\n    <ng-template #facebookLogin>\n\n      <button ion-button block clear (click)="loginFace()" color="light" class="login-button"><ion-icon name="logo-facebook"></ion-icon> Login with Facebook</button>\n\n    </ng-template>\n\n  --> \n\n  \n\n  </ion-content>\n\n  <ion-footer>\n\n    <ion-toolbar class="footer">\n\n      <div (click)="irCadastro()">\n\n        <span>Ainda não tem conta? <strong>Cadastre-se aqui</strong>.</span>\n\n      </div>\n\n    </ion-toolbar>\n\n  </ion-footer>'/*ion-inline-end:"C:\Users\Samsung\Documents\AlunoAmigo\b12\src\pages\welcome\welcome.html"*/,
-        }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_7_ionic_angular__["h" /* LoadingController */],
-            __WEBPACK_IMPORTED_MODULE_7_ionic_angular__["c" /* App */],
-            __WEBPACK_IMPORTED_MODULE_1__providers_user_user_service__["a" /* UserServiceProvider */],
-            __WEBPACK_IMPORTED_MODULE_10__ionic_native_facebook__["a" /* Facebook */],
-            __WEBPACK_IMPORTED_MODULE_7_ionic_angular__["k" /* NavController */],
-            __WEBPACK_IMPORTED_MODULE_7_ionic_angular__["l" /* NavParams */], __WEBPACK_IMPORTED_MODULE_7_ionic_angular__["b" /* AlertController */],
-            __WEBPACK_IMPORTED_MODULE_8__providers_auth_auth_service__["a" /* AuthServiceProvider */], __WEBPACK_IMPORTED_MODULE_9__angular_forms__["a" /* FormBuilder */]])
-    ], WelcomePage);
-    return WelcomePage;
-}());
-
-//# sourceMappingURL=welcome.js.map
-
-/***/ }),
-
 /***/ 156:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -398,11 +79,11 @@ var WelcomePage = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StoryPhotoPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_story_story_service__ = __webpack_require__(157);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__providers_user_user_service__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_canvas_draw_canvas_draw__ = __webpack_require__(280);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_canvas_draw_canvas_draw__ = __webpack_require__(282);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_camera_preview__ = __webpack_require__(281);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_ionic_native__ = __webpack_require__(283);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_camera_preview__ = __webpack_require__(283);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_ionic_native__ = __webpack_require__(285);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_firebase__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_firebase__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_story_model__ = __webpack_require__(756);
@@ -1004,17 +685,17 @@ var ChatServiceProvider = (function (_super) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChatPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__home_home__ = __webpack_require__(54);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_notificacao_model__ = __webpack_require__(766);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_notificacao_model__ = __webpack_require__(767);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_chat_chat_service__ = __webpack_require__(161);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_message_message_service__ = __webpack_require__(74);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_auth_auth_service__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_ionic_angular__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_user_user_service__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_message_model__ = __webpack_require__(420);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_message_model__ = __webpack_require__(422);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_firebase__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_firebase__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__perfil_perfil__ = __webpack_require__(100);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__perfil_perfil__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_local_notifications__ = __webpack_require__(160);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1095,14 +776,17 @@ var ChatPage = (function () {
             });
             var doSubscription = function () {
                 _this.messages.subscribe(function (messages) {
+                    // this.decrypt();
                     _this.scrollToBottom();
                 });
             };
             _this.messages = _this.messageService.getMessages(_this.sender.$key, _this.recipient.$key);
+            // this.decrypt();
             _this.notificacoes = _this.messageService.getAllNotificacoes(_this.recipient.$key);
             _this.messages.first().subscribe(function (messages) {
                 if (messages.length === 0) {
                     _this.messages = _this.messageService.getMessages(_this.recipient.$key, _this.sender.$key);
+                    //  this.decrypt();
                     doSubscription();
                 }
                 else {
@@ -1114,6 +798,14 @@ var ChatPage = (function () {
     };
     ChatPage.prototype.ionViewCanEnter = function () {
         return this.authService.authenticated;
+    };
+    ChatPage.prototype.decrypt = function () {
+        this.messages.forEach(function (m) {
+            m.forEach(function (me) {
+                me.text = __WEBPACK_IMPORTED_MODULE_3__providers_message_message_service__["a" /* MessageServiceProvider */].getDEcryptedCode(me.text, 'docrjicrjfijrifjrijefirejfifjdc324j2343h24h23u4hu32h4uh3u4h');
+                console.log(me);
+            });
+        });
     };
     ChatPage.prototype.sendMessage = function (newMessage) {
         var _this = this;
@@ -1161,9 +853,11 @@ var ChatPage = (function () {
                     _this.sender = currentUser;
                     _this.messageService.loadMoreObjects();
                     _this.messages = _this.messageService.getMessages(_this.sender.$key, _this.recipient.$key);
+                    //    this.decrypt();
                     _this.messages.first().subscribe(function (messages) {
                         if (messages.length === 0) {
                             _this.messages = _this.messageService.getMessages(_this.recipient.$key, _this.sender.$key);
+                            //  this.decrypt();
                         }
                         else {
                         }
@@ -1207,7 +901,7 @@ var ChatPage = (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SpottedPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_spotted_spotted_service__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_spotted_spotted_service__ = __webpack_require__(59);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__home_home__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_auth_auth_service__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_user_user_service__ = __webpack_require__(18);
@@ -1216,8 +910,8 @@ var ChatPage = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_forms__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_firebase__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_firebase__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_spotted_model__ = __webpack_require__(767);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_native__ = __webpack_require__(283);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_spotted_model__ = __webpack_require__(768);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_native__ = __webpack_require__(285);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1611,6 +1305,8 @@ webpackEmptyAsyncContext.id = 175;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__base_service__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs__ = __webpack_require__(58);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs__);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -1639,6 +1335,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 
+
 //import * as firebase from 'firebase';
 /*
   Generated class for the UserProvider provider.
@@ -1656,10 +1353,15 @@ var UserServiceProvider = (function (_super) {
         _this.platform = platform;
         _this.firebaseApp = firebaseApp;
         _this.http = http;
+        _this.nbObjects = new __WEBPACK_IMPORTED_MODULE_6_rxjs__["BehaviorSubject"](30);
+        _this.nbObjects.next(_this.nbObjects.getValue() + 30);
         // nao precisa mais   this.users = this.af.database.list(`/users`);
         _this.listenAuthState();
         return _this;
     }
+    UserServiceProvider.prototype.loadMoreObjects = function () {
+        this.nbObjects.next(this.nbObjects.getValue() + 30);
+    };
     UserServiceProvider.prototype.listenAuthState = function () {
         var _this = this;
         this.af.auth.subscribe(function (authState) {
@@ -1667,6 +1369,7 @@ var UserServiceProvider = (function (_super) {
                 _this.currentUser = _this.af.database.object("/users/" + authState.auth.uid);
                 // this.setUsersPerto(this.arrayUsuariosDistantes);
                 //console.log("usersprovider");
+                //this.users = this.getAllUsers(authState.auth.uid);
                 _this.setUsers(authState.auth.uid);
             }
         });
@@ -1674,11 +1377,24 @@ var UserServiceProvider = (function (_super) {
     UserServiceProvider.prototype.setUsers = function (uidToExclude) {
         this.users = this.af.database.list("users", {
             query: {
-                orderByChild: 'name'
+                orderByChild: 'name',
+                limitToLast: this.nbObjects
             }
         }).map(function (users) {
             return users.filter(function (user) { return user.$key !== uidToExclude; });
         });
+    };
+    UserServiceProvider.prototype.getAllUsers = function (uidToExclude) {
+        return this.af.database.list("/users", {
+            query: {
+                orderByChild: 'name',
+                limitToLast: this.nbObjects
+                //limita o numero de mensagens que ira aparecer na tela
+            }
+        }).map(function (users) {
+            return users.filter(function (user) { return user.$key !== uidToExclude; });
+        })
+            .catch(this.handleObservableError);
     };
     UserServiceProvider.prototype.get = function (userId) {
         return this.af.database.object("/users/" + userId)
@@ -1763,14 +1479,22 @@ webpackEmptyAsyncContext.id = 217;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthServiceProvider; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_first__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_first___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_first__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__base_service__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_first__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_first___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_first__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__base_service__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_firebase_app__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_firebase_app___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_firebase_app__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_timer__ = __webpack_require__(266);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_timer___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_timer__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_throttleTime__ = __webpack_require__(274);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_throttleTime___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_throttleTime__);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -1796,12 +1520,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-/*
-  Generated class for the AuthProvider provider.
 
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular DI.
-*/
+
+
+
 var AuthServiceProvider = (function (_super) {
     __extends(AuthServiceProvider, _super);
     function AuthServiceProvider(auth, af, http) {
@@ -1812,17 +1534,65 @@ var AuthServiceProvider = (function (_super) {
         _this.authenticatedref = _this.auth;
         _this.auth
             .do(function (user) {
+            _this.user = user;
             if (user) {
                 _this.userId = user.uid;
+                _this.emailVerified = user.auth.emailVerified;
                 _this.updateOnConnect();
+                _this.updateOnDisconnect();
+                _this.updateOnIdle();
             }
         })
             .subscribe();
         return _this;
         //console.log('Hello AuthProvider Provider');
     }
+    AuthServiceProvider.prototype.getEmailVerified = function () {
+        return this.emailVerified;
+    };
+    AuthServiceProvider.prototype.getUserId = function () {
+        return this.userId;
+    };
+    AuthServiceProvider.prototype.updateOnIdle = function () {
+        var _this = this;
+        this.mouseEvents = __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__["Observable"].fromEvent(document, 'mousemove').throttleTime(2000)
+            .do(function () {
+            _this.updateStatus('online');
+            _this.resetTimer();
+        }).subscribe();
+    };
+    AuthServiceProvider.prototype.resetTimer = function () {
+        var _this = this;
+        if (this.timer)
+            this.timer.unsubscribe();
+        this.timer = __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__["Observable"].timer(5000).do(function () {
+            _this.updateStatus('away');
+        }).subscribe();
+    };
     AuthServiceProvider.prototype.createAuthUser = function (user) {
         return this.auth.createUser(user).catch(this.handlePromiseError);
+    };
+    AuthServiceProvider.prototype.emailVerification = function () {
+        //this.authState.auth.getAuth().auth.sendEmailVerification();
+        //firebase.auth().currentUser.sendEmailVerification();
+        this.auth.getAuth().auth.sendEmailVerification().then(function () {
+            __WEBPACK_IMPORTED_MODULE_7_firebase_app__["auth"]().currentUser.sendEmailVerification();
+            //this.sendEmailVerification();
+            //let user:any = firebase.auth().currentUser;
+            //this.user.sendEmailVerification();
+        }).catch(function (error) {
+            // An error happened.
+        });
+    };
+    AuthServiceProvider.prototype.sendEmailVerification = function () {
+        var _this = this;
+        this.auth.subscribe(function (user) {
+            user.auth.sendEmailVerification()
+                .then(function () {
+                console.log('email sent');
+                _this.registerSuccess = 'Check your email for a verification email.';
+            });
+        });
     };
     AuthServiceProvider.prototype.signinWithEmail = function (user) {
         return this.auth.login(user).then(function (authState) {
@@ -1832,15 +1602,21 @@ var AuthServiceProvider = (function (_super) {
     AuthServiceProvider.prototype.facebookLogin = function (fb) {
         return fb.login(['email'])
             .then(function (response) {
-            var facebookCredential = firebase.auth.FacebookAuthProvider
+            var facebookCredential = __WEBPACK_IMPORTED_MODULE_7_firebase_app__["auth"].FacebookAuthProvider
                 .credential(response.authResponse.accessToken);
-            firebase.auth().signInWithCredential(facebookCredential)
+            __WEBPACK_IMPORTED_MODULE_7_firebase_app__["auth"]().signInWithCredential(facebookCredential)
                 .then(function (success) {
                 console.log("Firebase success: " + JSON.stringify(success));
             });
         }).catch(function (error) { console.log(error); });
     };
     AuthServiceProvider.prototype.logout = function () {
+        this.updateStatus('offline');
+        this.mouseEvents.unsubscribe();
+        this.timer.unsubscribe();
+        return this.auth.logout();
+    };
+    AuthServiceProvider.prototype.vazar = function () {
         return this.auth.logout();
     };
     Object.defineProperty(AuthServiceProvider.prototype, "authenticated", {
@@ -1872,18 +1648,26 @@ var AuthServiceProvider = (function (_super) {
             return;
         this.af.database.object("users/" + this.userId).update({ status: status });
     };
+    AuthServiceProvider.prototype.updateOnDisconnect = function () {
+        __WEBPACK_IMPORTED_MODULE_7_firebase_app__["database"]().ref().child('users/' + this.userId).onDisconnect().update({ status: 'offline' });
+        /*
+          this.af.database.object(`users/${this.userId}`)
+                  .onDisconnect()
+                  .update({status: 'offline'})
+        */
+    };
     AuthServiceProvider = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["B" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0_angularfire2__["b" /* AngularFireAuth */], __WEBPACK_IMPORTED_MODULE_0_angularfire2__["a" /* AngularFire */], __WEBPACK_IMPORTED_MODULE_2__angular_http__["a" /* Http */]])
+        Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["B" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_angularfire2__["b" /* AngularFireAuth */], __WEBPACK_IMPORTED_MODULE_1_angularfire2__["a" /* AngularFire */], __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* Http */]])
     ], AuthServiceProvider);
     return AuthServiceProvider;
-}(__WEBPACK_IMPORTED_MODULE_5__base_service__["a" /* BaseService */]));
+}(__WEBPACK_IMPORTED_MODULE_6__base_service__["a" /* BaseService */]));
 
 //# sourceMappingURL=auth.service.js.map
 
 /***/ }),
 
-/***/ 280:
+/***/ 282:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1997,20 +1781,20 @@ var CanvasDraw = (function () {
 
 /***/ }),
 
-/***/ 416:
+/***/ 418:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BotchatPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_mensagem_model__ = __webpack_require__(757);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_mensagem_model__ = __webpack_require__(758);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_firebase__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_firebase__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_api_ai_javascript__ = __webpack_require__(758);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_api_ai_javascript__ = __webpack_require__(759);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__(155);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_environment__ = __webpack_require__(764);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_environment__ = __webpack_require__(765);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2098,7 +1882,7 @@ var BotchatPage = (function () {
 
 /***/ }),
 
-/***/ 420:
+/***/ 422:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2116,23 +1900,23 @@ var Message = (function () {
 
 /***/ }),
 
-/***/ 421:
+/***/ 423:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SpottedDetalhesPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__models_bloqueado_model__ = __webpack_require__(768);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__models_bloqueado_model__ = __webpack_require__(769);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__providers_bloqueado_bloqueado_service__ = __webpack_require__(159);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_spotted_spotted_service__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_spotted_spotted_service__ = __webpack_require__(59);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_firebase__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_firebase__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_comentario_model__ = __webpack_require__(769);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_comentario_model__ = __webpack_require__(770);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_user_user_service__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_denuncia_denuncia_service__ = __webpack_require__(164);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__perfil_perfil__ = __webpack_require__(100);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_denuncia_model__ = __webpack_require__(770);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__perfil_perfil__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_denuncia_model__ = __webpack_require__(771);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2403,12 +2187,12 @@ var SpottedDetalhesPage = (function () {
 
 /***/ }),
 
-/***/ 423:
+/***/ 425:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SignupPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__stories_list_stories_list__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__stories_list_stories_list__ = __webpack_require__(82);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__home_home__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_auth_auth_service__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_user_user_service__ = __webpack_require__(18);
@@ -2417,6 +2201,7 @@ var SpottedDetalhesPage = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_forms__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_firebase__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_firebase__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__welcome_welcome__ = __webpack_require__(81);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2426,6 +2211,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -2510,26 +2296,62 @@ var SignupPage = (function () {
         //this.userService.userExists(curso).take(1).subscribe(
         this.userService.emailExists(formUser.email).first().subscribe(function (userExists) {
             if (!userExists) {
+                // this.authService.
                 _this.authService.createAuthUser({
                     email: formUser.email,
                     password: formUser.password
-                }).then(function (authState) {
+                }).then(function () {
                     delete formUser.password;
-                    var uuid = authState.auth.uid;
-                    _this.userService.create(formUser, uuid).then(function () {
-                        //console.log('usuario cadastrado');
-                        _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_1__home_home__["a" /* HomePage */]);
-                        loading.dismiss();
-                    }).catch(function (error) {
-                        //console.log(error);
-                        loading.dismiss();
-                        _this.showAlert(error);
-                    }).catch(function (error) {
-                        ////console.log(error);
-                        loading.dismiss();
-                        _this.showAlert(error);
-                    });
+                    _this.authService.sendEmailVerification();
+                    loading.dismiss();
                 });
+                var alert_1 = _this.alertCtrl.create({
+                    title: 'Confirme o seu email para realizar o login',
+                    buttons: [
+                        {
+                            text: 'OK',
+                            handler: function () {
+                                delete formUser.password;
+                                _this.userService.create(formUser, _this.authService.getUserId());
+                                loading.dismiss();
+                                _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_8__welcome_welcome__["a" /* WelcomePage */]);
+                            }
+                        }
+                    ]
+                });
+                alert_1.present();
+                /*
+                 this.authService.createAuthUser({
+                   email: formUser.email,
+                   password: formUser.password
+                 }).then(()=>{
+                   delete formUser.password;
+                   loading.dismiss();
+                 
+                 })
+                 .then((authState: FirebaseAuthState) => {
+                   delete formUser.password;
+                   let uuid: string = authState.auth.uid;
+                   console.log(uuid,"ou");
+                   console.log(authState,"ou");
+       
+                  
+                   this.userService.create(formUser, uuid).then(() => {
+                     console.log('usuario cadastrado');
+                     //this.navCtrl.setRoot(HomePage);
+                     loading.dismiss();
+                   }).catch((error: any) => {
+                     //console.log(error);
+                     loading.dismiss();
+                     this.showAlert(error);
+                   }).catch((error: any) => {
+                     ////console.log(error);
+                     loading.dismiss();
+                     this.showAlert(error);
+                   });
+       
+                 });
+                */
                 //console.log("testando form");
             }
             else {
@@ -2565,7 +2387,7 @@ var SignupPage = (function () {
 
 /***/ }),
 
-/***/ 424:
+/***/ 426:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2638,7 +2460,7 @@ var ClienteLoginPage = (function () {
 
 /***/ }),
 
-/***/ 426:
+/***/ 428:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2737,7 +2559,7 @@ var NotificacoesPage = (function () {
 
 /***/ }),
 
-/***/ 427:
+/***/ 429:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2834,12 +2656,12 @@ var UserProfilePage = (function () {
 
 /***/ }),
 
-/***/ 428:
+/***/ 430:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BaseComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_welcome_welcome__ = __webpack_require__(103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_welcome_welcome__ = __webpack_require__(81);
 
 var BaseComponent = (function () {
     function BaseComponent(alertCtrl, authService, app, menuCtrl) {
@@ -2876,12 +2698,12 @@ var BaseComponent = (function () {
 
 /***/ }),
 
-/***/ 432:
+/***/ 434:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProfissionalLoginPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_spotted_spotted_service__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_spotted_spotted_service__ = __webpack_require__(59);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_user_user_service__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(12);
@@ -2937,13 +2759,13 @@ var ProfissionalLoginPage = (function () {
 
 /***/ }),
 
-/***/ 433:
+/***/ 435:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(434);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(438);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(436);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(440);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -2951,24 +2773,24 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 438:
+/***/ 440:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_welcome_welcome__ = __webpack_require__(103);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__pages_notificacoes_notificacoes__ = __webpack_require__(426);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__pages_stories_list_stories_list__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_canvas_draw_canvas_draw__ = __webpack_require__(280);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_botchat_botchat__ = __webpack_require__(416);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_progress_bar_progress_bar__ = __webpack_require__(772);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_user_profile_user_profile__ = __webpack_require__(427);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_welcome_welcome__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__pages_notificacoes_notificacoes__ = __webpack_require__(428);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__pages_stories_list_stories_list__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_canvas_draw_canvas_draw__ = __webpack_require__(282);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_botchat_botchat__ = __webpack_require__(418);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_progress_bar_progress_bar__ = __webpack_require__(773);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_user_profile_user_profile__ = __webpack_require__(429);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_message_message_service__ = __webpack_require__(74);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_chat_chat__ = __webpack_require__(162);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pipes_capitalize_capitalize__ = __webpack_require__(773);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_custom_logged_header_custom_logged_header__ = __webpack_require__(774);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_signup_signup__ = __webpack_require__(423);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_clienteLogin_clientelogin__ = __webpack_require__(424);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pipes_capitalize_capitalize__ = __webpack_require__(774);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_custom_logged_header_custom_logged_header__ = __webpack_require__(775);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_signup_signup__ = __webpack_require__(425);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_clienteLogin_clientelogin__ = __webpack_require__(426);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_home_home__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__providers_auth_auth_service__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__angular_platform_browser__ = __webpack_require__(51);
@@ -2976,31 +2798,31 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_ionic_angular__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__angular_http__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__ionic_native_local_notifications__ = __webpack_require__(160);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__ionic_native_geolocation__ = __webpack_require__(422);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__app_component__ = __webpack_require__(775);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_status_bar__ = __webpack_require__(429);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__ionic_native_splash_screen__ = __webpack_require__(430);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__ionic_native_geolocation__ = __webpack_require__(424);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__app_component__ = __webpack_require__(776);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_status_bar__ = __webpack_require__(431);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__ionic_native_splash_screen__ = __webpack_require__(432);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24_angularfire2__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__pages_spotted_detalhes_spotted_detalhes__ = __webpack_require__(421);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__ionic_native_camera_preview__ = __webpack_require__(281);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__ionic_native_camera__ = __webpack_require__(776);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__pages_perfil_perfil__ = __webpack_require__(100);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__pages_spotted_detalhes_spotted_detalhes__ = __webpack_require__(423);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__ionic_native_camera_preview__ = __webpack_require__(283);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__ionic_native_camera__ = __webpack_require__(777);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__pages_perfil_perfil__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__providers_user_user_service__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_profissionalLogin_profissionallogin__ = __webpack_require__(432);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_profissionalLogin_profissionallogin__ = __webpack_require__(434);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__providers_chat_chat_service__ = __webpack_require__(161);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__components_message_box_message_box__ = __webpack_require__(777);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__components_user_menu_user_menu__ = __webpack_require__(778);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__components_user_info_user_info__ = __webpack_require__(779);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__components_message_box_message_box__ = __webpack_require__(778);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__components_user_menu_user_menu__ = __webpack_require__(779);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__components_user_info_user_info__ = __webpack_require__(780);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_spotted_spotted__ = __webpack_require__(163);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_spotted_spotted_service__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_spotted_spotted_service__ = __webpack_require__(59);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__pages_story_photo_story_photo__ = __webpack_require__(156);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__providers_story_story_service__ = __webpack_require__(157);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__providers_denuncia_denuncia_service__ = __webpack_require__(164);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__pages_denuncias_denuncias__ = __webpack_require__(780);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__ionic_native_facebook__ = __webpack_require__(425);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__providers_backbutton_backbutton__ = __webpack_require__(781);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__pages_denuncias_denuncias__ = __webpack_require__(781);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__ionic_native_facebook__ = __webpack_require__(427);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__providers_backbutton_backbutton__ = __webpack_require__(782);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__providers_bloqueado_bloqueado_service__ = __webpack_require__(159);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__ionic_native_deeplinks__ = __webpack_require__(431);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__ionic_native_deeplinks__ = __webpack_require__(433);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3125,7 +2947,7 @@ var AppModule = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BaseService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_http__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs__ = __webpack_require__(58);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs__);
 
 
@@ -3168,14 +2990,14 @@ var BaseService = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__providers_message_message_service__ = __webpack_require__(74);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_local_notifications__ = __webpack_require__(160);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_story_story_service__ = __webpack_require__(157);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs__ = __webpack_require__(58);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_spotted_spotted_service__ = __webpack_require__(57);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__botchat_botchat__ = __webpack_require__(416);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_spotted_spotted_service__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__botchat_botchat__ = __webpack_require__(418);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_chat_chat_service__ = __webpack_require__(161);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_chat_model__ = __webpack_require__(765);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_chat_model__ = __webpack_require__(766);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__chat_chat__ = __webpack_require__(162);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__welcome_welcome__ = __webpack_require__(103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__welcome_welcome__ = __webpack_require__(81);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__providers_auth_auth_service__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_ionic_angular__ = __webpack_require__(12);
@@ -3185,10 +3007,10 @@ var BaseService = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_rxjs_add_operator_first__ = __webpack_require__(73);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_rxjs_add_operator_first___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_16_rxjs_add_operator_first__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__spotted_spotted__ = __webpack_require__(163);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__spotted_detalhes_spotted_detalhes__ = __webpack_require__(421);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__ionic_native_geolocation__ = __webpack_require__(422);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__perfil_perfil__ = __webpack_require__(100);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_geofire__ = __webpack_require__(771);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__spotted_detalhes_spotted_detalhes__ = __webpack_require__(423);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__ionic_native_geolocation__ = __webpack_require__(424);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__perfil_perfil__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_geofire__ = __webpack_require__(772);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_geofire___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_21_geofire__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -3272,9 +3094,8 @@ var HomePage = (function () {
                 'cubeEffect': false
             }
         };
-        this.myElement = null;
-        this.zukeModal = null;
         this.plataforma = platform.is('android');
+        this.view = navParams.get('visao');
         this.storyService.getFeed();
         var onclickObservable = this.localNotifications.on("click");
         onclickObservable.first().subscribe(function (notification) {
@@ -3284,7 +3105,9 @@ var HomePage = (function () {
                     _this.view = 'conversas';
                 }
                 else {
-                    _this.navCtrl.setRoot(HomePage_1).then(function () {
+                    _this.navCtrl.setRoot(HomePage_1, {
+                        visao: 'feed'
+                    }).then(function () {
                         //this.view = 'conversas'; 
                         //HomePage.flag = true;
                         _this.userService.currentUser.first().subscribe(function (currentUser) { return _this.chatService.getDeepChat(currentUser.$key, notification.data.notif.senderKey).
@@ -3325,7 +3148,9 @@ var HomePage = (function () {
                     text: 'Sim',
                     handler: function () {
                         _this.spottedService.delete(spotted);
-                        _this.navCtrl.setRoot(HomePage_1);
+                        _this.navCtrl.setRoot(HomePage_1, {
+                            visao: 'feed'
+                        });
                     }
                 }
             ]
@@ -3409,64 +3234,55 @@ var HomePage = (function () {
     HomePage.prototype.setLocation = function (key, coords) {
         this.geoFire.set(key, coords);
     };
+    HomePage.prototype.bloqueia = function () {
+        var _this = this;
+        this.bloqueados.forEach(function (bloq) {
+            bloq.forEach(function (b) {
+                _this.users = _this.users.map(function (users) {
+                    return users.filter(function (user) {
+                        return (user.$key !== b.bloqueado);
+                    });
+                });
+                _this.spotteds = _this.spotteds.map(function (spotteds) {
+                    return spotteds.filter(function (spotted) {
+                        return (spotted.userId !== b.bloqueado);
+                    });
+                });
+                _this.chats = _this.chats.map(function (chats) {
+                    return chats.filter(function (chat) {
+                        return (chat.title !== b.nomeBloqueado);
+                    });
+                });
+            });
+        });
+    };
     HomePage.prototype.ionViewDidLoad = function () {
         var _this = this;
+        if (!this.authService.getEmailVerified()) {
+            this.authService.vazar();
+            this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_10__welcome_welcome__["a" /* WelcomePage */]);
+        }
         this.userService.currentUser.first().subscribe(function (currentUser) {
             _this.chave = currentUser.$key;
             _this.raioDoUsuario = currentUser.distance;
         });
         if (this.chave === undefined) {
-            this.navCtrl.setRoot(HomePage_1);
-            //console.log("e");
+            this.navCtrl.setRoot(HomePage_1, {
+                visao: this.view
+            });
         }
         else {
-            console.log(this.chave);
             this.chats = this.chatService.chats;
             this.stories = this.storyService.stories;
-            //console.log(this.stories);
             var diferencaTempo_1;
             if (this.stories === undefined || this.stories === null) {
                 this.feeds = this.storyService.getFeed();
-                //console.log("feeds",this.feeds);
-                //console.log("plataforma eh "+this.plataforma);
-                //tenho que modificar o html dos componente toda vez que entra para atualizar
-                this.myElement = document.getElementById("stories");
-                //console.log(this.myElement);
-                if (this.myElement === null) {
-                }
-                else {
-                    this.myElement.innerHTML = "";
-                    //modificar também os componentes do próprio zuck-modal que ficam salvos
-                    this.zukeModal = document.getElementById("zuck-modal");
-                    //console.log(this.zukeModal);
-                    if (this.zukeModal) {
-                        if (this.zukeModal.parentNode) {
-                            this.zukeModal.parentNode.removeChild(this.zukeModal);
-                        }
-                    }
-                    var skin = "Snapgram";
-                    if (this.feeds === null || this.feeds === undefined) {
-                    }
-                    else {
-                        var stories = new window.Zuck('stories', {
-                            backNative: true,
-                            autoFullScreen: this.skins[skin]['autoFullScreen'],
-                            skin: skin,
-                            avatars: this.skins[skin]['avatars'],
-                            list: this.skins[skin]['list'],
-                            cubeEffect: this.skins[skin]['cubeEffect'],
-                            localStorage: true,
-                            stories: this.feeds //feeds //
-                        });
-                        //console.log(stories);
-                    }
-                }
+                //tenho que modificar o html dos componente toda vez que entra para atuali  
             }
             else {
                 this.stories.forEach(function (element) {
                     element.forEach(function (k) {
                         diferencaTempo_1 = Math.floor((Math.floor(Date.now() / 1000) - k.timestamp) / 60 / 60 / 24);
-                        ////console.log(diferencaTempo,"dif");
                         if (diferencaTempo_1 > 1) {
                             var storageRef = __WEBPACK_IMPORTED_MODULE_15_firebase___default.a.storage().ref();
                             storageRef.child("stories/" + k.userId + "/" + k.timestamp + ".jpeg").delete();
@@ -3485,29 +3301,11 @@ var HomePage = (function () {
                     });
                 });
             }
-            //console.log(this.feeds);
+            //          this.users = this.userService.users;
             this.users = this.userService.users;
             this.spotteds = this.spottedService.getAllSpotteds();
             this.bloqueados = this.bloqueadoService.getBloqueados(this.chave);
-            this.bloqueados.forEach(function (bloq) {
-                bloq.forEach(function (b) {
-                    _this.users = _this.users.map(function (users) {
-                        return users.filter(function (user) {
-                            return (user.$key !== b.bloqueado);
-                        });
-                    });
-                    _this.spotteds = _this.spotteds.map(function (spotteds) {
-                        return spotteds.filter(function (spotted) {
-                            return (spotted.userId !== b.bloqueado);
-                        });
-                    });
-                    _this.chats = _this.chats.map(function (chats) {
-                        return chats.filter(function (chat) {
-                            return (chat.title !== b.nomeBloqueado);
-                        });
-                    });
-                });
-            });
+            this.bloqueia();
             //          this.spotteds = this.spottedService.spotteds;
             var esseUsuarioTaPerto = 0;
             this.geolocaliza();
@@ -3527,37 +3325,6 @@ var HomePage = (function () {
                 alert_1.present();
             } //fim do if
         }
-        /*
-              this.users.forEach((userss)=>{
-                  userss.forEach((u)=>{
-                      this.arrayGlobal.forEach((usuariosComLocalizacao)=>{
-                          if(usuariosComLocalizacao.key == u.$key){
-                              esseUsuarioTaPerto = 1;
-                          }
-                      });
-                     if(esseUsuarioTaPerto === 1){
-                         esseUsuarioTaPerto = 0;
-                     }else{
-                         this.users = <FirebaseListObservable<User[]>>this.users.map(
-                  (users: User[]) => {
-                    return users.filter(
-                      (user: User) => {
-                        return (user.$key !== u.$key);
-                      });
-                  });
-                  //FILTRAGEM DOS SPOTTED
-                  this.spotteds = <FirebaseListObservable<Spotted[]>>this.spotteds.map(
-                    (spotteds: Spotted[]) => {
-                      return spotteds.filter(
-                        (spotted: Spotted) => {
-                          return (spotted.userId !== u.$key);
-                        });
-                    });
-                     }
-                  });
-              });
-      
-      */
         if (!HomePage_1.flag) {
             this.userService.currentUser.first().subscribe(function (currentUser) {
                 _this.notificacoes = _this.messageService.getAllNotificacoes(currentUser.$key);
@@ -3592,54 +3359,6 @@ var HomePage = (function () {
             });
         }
         this.menuCtrl.enable(true, 'user-menu');
-    };
-    HomePage.prototype.geolocaliza = function () {
-        var _this = this;
-        this.referencia = this.spottedService.metodoretornareferencia().$ref;
-        this.geoFire = new __WEBPACK_IMPORTED_MODULE_21_geofire__(this.referencia);
-        this.platform.ready().then(function () {
-            var options = {
-                enableHighAccuracy: true,
-                maximumAge: 0,
-                timeout: 5000
-            };
-            _this.geolocation.getCurrentPosition(options).then(function (resp) {
-                _this.lat = resp.coords.latitude;
-                _this.long = resp.coords.longitude;
-                _this.arraydelocalizacao = [_this.lat, _this.long];
-                if (_this.arraydelocalizacao === undefined || _this.arraydelocalizacao === null) {
-                    var alert_2 = _this.alertCtrl.create({
-                        title: 'Sua localização não foi detectada',
-                        message: 'Por favor ligue o GPS do seu dispositivo',
-                        buttons: [
-                            {
-                                text: 'OK',
-                                handler: function () {
-                                    _this.navCtrl.setRoot(HomePage_1);
-                                }
-                            }
-                        ]
-                    });
-                    alert_2.present();
-                }
-                console.log("array dentro do metodo getCurrentPosition", _this.arraydelocalizacao);
-                _this.geoFire.set(_this.chave, _this.arraydelocalizacao);
-                console.log(_this.getLocationUsers(120000, _this.raioDoUsuario, _this.arraydelocalizacao));
-            }).catch(function (err) {
-                console.log(err);
-            });
-            /*this.geolocation.watchPosition(options).subscribe(resp=>{
-              this.lat =  resp.coords.latitude;
-              this.long = resp.coords.longitude;
-        this.arraydelocalizacao = [this.lat, this.long];
-        console.log("array dentro do metodo getCurrentPosition" , this.arraydelocalizacao);
-       
-             this.geoFire.set(this.chave,this.arraydelocalizacao);
-        
-        console.log(this.getLocationUsers(120000,this.raioDoUsuario,this.arraydelocalizacao));
-            });
-            */
-        });
     };
     HomePage.prototype.onChatCreate = function (recipientUser) {
         var _this = this;
@@ -3715,7 +3434,6 @@ var HomePage = (function () {
                                     text: 'Cancelar',
                                     role: 'cancel',
                                     handler: function () {
-                                        //console.log('Cancel clicked');
                                     }
                                 },
                                 {
@@ -3730,7 +3448,6 @@ var HomePage = (function () {
                                         data.usuarioCurso = _this.usuarioCurso;
                                         data.usuarioFaculdade = _this.usuarioFaculdade;
                                         data.timestamp = __WEBPACK_IMPORTED_MODULE_15_firebase___default.a.database.ServerValue.TIMESTAMP;
-                                        //console.log(data);
                                         _this.spottedService.createSolicitacao(data);
                                     }
                                 }
@@ -3782,7 +3499,9 @@ var HomePage = (function () {
         var searchTerm = event.target.value;
         this.chats = this.chatService.chats;
         this.users = this.userService.users;
-        this.spotteds = this.spottedService.spotteds;
+        this.spotteds = this.spottedService.getAllSpotteds();
+        this.geolocaliza();
+        this.bloqueia();
         if (searchTerm) {
             switch (this.view) {
                 case 'conversas':
@@ -3840,52 +3559,149 @@ var HomePage = (function () {
         });
     };
     HomePage.prototype.ionViewWillEnter = function () {
-        this.myElement = document.getElementById("stories");
-        //console.log(this.myElement);
-        if (this.myElement === null) {
+        var myElement = document.getElementById("stories");
+        myElement.innerHTML = "";
+        //modificar também os componentes do próprio zuck-modal que ficam salvos
+        var zukeModal = document.getElementById("zuck-modal");
+        if (zukeModal) {
+            if (zukeModal.parentNode) {
+                zukeModal.parentNode.removeChild(zukeModal);
+            }
         }
-        else {
-            this.myElement.innerHTML = "";
-            //modificar também os componentes do próprio zuck-modal que ficam salvos
-            this.zukeModal = document.getElementById("zuck-modal");
-            //console.log(this.zukeModal);
-            if (this.zukeModal) {
-                if (this.zukeModal.parentNode) {
-                    this.zukeModal.parentNode.removeChild(this.zukeModal);
-                }
-            }
-            var skin = "Snapgram";
-            if (this.feeds === null || this.feeds === undefined) {
-            }
-            else {
-                var stories = new window.Zuck('stories', {
-                    backNative: true,
-                    autoFullScreen: this.skins[skin]['autoFullScreen'],
-                    skin: skin,
-                    avatars: this.skins[skin]['avatars'],
-                    list: this.skins[skin]['list'],
-                    cubeEffect: this.skins[skin]['cubeEffect'],
-                    localStorage: true,
-                    stories: this.feeds //feeds //
-                });
-                //console.log(stories);
-            }
+        var skin = "Snapgram";
+        var stories = new window.Zuck('stories', {
+            backNative: true,
+            autoFullScreen: this.skins[skin]['autoFullScreen'],
+            skin: skin,
+            avatars: this.skins[skin]['avatars'],
+            list: this.skins[skin]['list'],
+            cubeEffect: this.skins[skin]['cubeEffect'],
+            localStorage: true,
+            stories: this.feeds //feeds //
+        });
+    };
+    HomePage.prototype.verificaArray = function () {
+        var tamain;
+        this.users.forEach(function (e) {
+            tamain = e.length;
+        });
+        if (this.arrayGlobal.length !== tamain) {
+            this.geolocaliza();
         }
     };
     HomePage.prototype.doInfinite = function (infiniteScroll) {
         var _this = this;
-        if (infiniteScroll) {
-            setTimeout(function () {
-                _this.spottedService.loadMoreObjects();
-                _this.navCtrl.setRoot(HomePage_1);
-                _this.spotteds = _this.spottedService.getAllSpotteds();
-                infiniteScroll.complete();
-            }, 900);
+        if (this.arrayGlobal === undefined) {
+            this.geolocaliza();
+            var alert_2 = this.alertCtrl.create({
+                title: 'Sua localização não foi detectada',
+                message: 'Por favor ligue o GPS do seu dispositivo',
+                buttons: [
+                    {
+                        text: 'OK',
+                        handler: function () {
+                            _this.navCtrl.setRoot(HomePage_1, {
+                                visao: _this.view
+                            });
+                        }
+                    }
+                ]
+            });
+            alert_2.present();
         }
+        else {
+            var tamain_1;
+            this.users.forEach(function (e) {
+                tamain_1 = e.length;
+            });
+            if (this.arrayGlobal.length !== tamain_1) {
+                this.geolocaliza();
+            }
+        }
+        if (this.view === 'conversas') {
+        }
+        else if (this.view === 'feed') {
+            if (infiniteScroll) {
+                setTimeout(function () {
+                    _this.spottedService.loadMoreObjects();
+                    _this.navCtrl.setRoot(HomePage_1, {
+                        visao: 'feed'
+                    });
+                    _this.spotteds = _this.spottedService.getAllSpotteds();
+                    infiniteScroll.complete();
+                }, 900);
+            }
+        }
+        else {
+            if (infiniteScroll) {
+                setTimeout(function () {
+                    _this.userService.loadMoreObjects();
+                    _this.navCtrl.setRoot(HomePage_1, {
+                        visao: 'pessoas'
+                    });
+                    _this.users = _this.userService.users;
+                    _this.geolocaliza();
+                    _this.bloqueia();
+                    infiniteScroll.complete();
+                }, 900);
+            }
+        }
+    };
+    HomePage.prototype.geolocaliza = function () {
+        var _this = this;
+        this.referencia = this.spottedService.metodoretornareferencia().$ref;
+        this.geoFire = new __WEBPACK_IMPORTED_MODULE_21_geofire__(this.referencia);
+        this.platform.ready().then(function () {
+            var options = {
+                enableHighAccuracy: true,
+                maximumAge: 0,
+                timeout: 5000
+            };
+            _this.geolocation.getCurrentPosition(options).then(function (resp) {
+                _this.lat = resp.coords.latitude;
+                _this.long = resp.coords.longitude;
+                _this.arraydelocalizacao = [_this.lat, _this.long];
+                if (_this.arraydelocalizacao === undefined || _this.arraydelocalizacao === null) {
+                    var alert_3 = _this.alertCtrl.create({
+                        title: 'Sua localização não foi detectada',
+                        message: 'Por favor ligue o GPS do seu dispositivo',
+                        buttons: [
+                            {
+                                text: 'OK',
+                                handler: function () {
+                                    _this.navCtrl.setRoot(HomePage_1, {
+                                        visao: _this.view
+                                    });
+                                }
+                            }
+                        ]
+                    });
+                    alert_3.present();
+                }
+                console.log("array dentro do metodo getCurrentPosition", _this.arraydelocalizacao);
+                _this.geoFire.set(_this.chave, _this.arraydelocalizacao);
+                console.log(_this.getLocationUsers(120000, _this.raioDoUsuario, _this.arraydelocalizacao));
+            }).catch(function (err) {
+                console.log(err);
+                _this.navCtrl.setRoot(HomePage_1, {
+                    visao: _this.view
+                });
+            });
+            /*this.geolocation.watchPosition(options).subscribe(resp=>{
+              this.lat =  resp.coords.latitude;
+              this.long = resp.coords.longitude;
+        this.arraydelocalizacao = [this.lat, this.long];
+       
+             this.geoFire.set(this.chave,this.arraydelocalizacao);
+        
+        console.log(this.getLocationUsers(120000,this.raioDoUsuario,this.arraydelocalizacao));
+            });
+            */
+        });
     };
     HomePage = HomePage_1 = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_12__angular_core__["n" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"C:\Users\Samsung\Documents\AlunoAmigo\b12\src\pages\home\home.html"*/'\n<ion-header>\n <custom-logged-header [title] = "view | capitalize : true"> </custom-logged-header>\n\n <ion-toolbar>\n  <ion-segment [(ngModel)] = "view">\n      <ion-segment-button value = "feed">\n          <ion-icon  name="home" color="primary"></ion-icon>\n              </ion-segment-button>\n    <ion-segment-button value = "conversas">\n        <ion-icon  name="chatboxes" color="primary"></ion-icon>\n      </ion-segment-button>\n    <ion-segment-button value = "pessoas">\n        <ion-icon  name="people" color="primary"></ion-icon>\n      </ion-segment-button>\n  </ion-segment>\n  <ion-searchbar placeholder="Pesquisar"  (ionInput)="filterItems($event)">\n    </ion-searchbar>\n</ion-toolbar>\n            <!--toolbar\n\n<ion-toolbar>\n    <ion-searchbar  (ionInput)="filterItems($event)">\n    </ion-searchbar>\n      \n  </ion-toolbar>\n-->\n\n  </ion-header>\n \n  \n  <ion-content  elastic-header>  \n    <div style="background-color: white" [ngSwitch] = "view" >\n        <div *ngSwitchCase = "\'feed\'" background-size id="elastic-header" [ngStyle]="{\'background-image\': \'url(\' + headerImage + \')\'}">\n            <!--Parallax Header Top-->\n            <div parallax-header *ngSwitchCase = "\'feed\'" >\n              <!--Parallax Subtitle -->\n              <h2 no-margin parallax-subtitle *ngSwitchCase = "\'feed\'"></h2>\n              <!--Parallax Title -->\n              <h2 no-margin parallax-title *ngSwitchCase = "\'feed\'">mais recentes</h2>\n            </div>\n          </div>\n          \n    \n  <ion-list *ngSwitchCase="\'feed\'">\n    <div #stories id="stories"  padding=""></div>\n\n          \n      <!--     COMENTARIO\n        <div id="stories" *ngFor="let story of stories | async " padding class="stories user-icon carousel snapgram">\n  <div class="story" data-id="story.$key" data-photo="story.userPhoto" data-last-updated="story.timestamp">\n    <a>\n      <span class ="img">\n        <u style="background-image:url(story.photo)"></u>\n      </span>\n      <span class="info">\n        <strong>{{story.userNome}}</strong>\n        <span class="time">{{story.timestamp}}</span>\n      </span>\n    </a>\n    <ul class="items">\n      <li class data-id="story.$key">\n        <a href="story.userPhoto" data-link date-time="story.timestamp" data-type="photo" data-length="10"></a>\n      </li>\n    </ul>\n  </div>\n</div>\n      <div id="zuck-modal" class="with-cube with-effects" tabindex="1" style="display:none;">\n       <div id="zuck-modal-content"></div>\n      </div>\n      \n      \n      -->\n      <!--     COMENTARIO            <img  round [src]="spotted.userId.photo || \'assets/images/no-photo.jpg\'">\n                    --> \n                  <ion-row>\n  \n                    <ion-row >\n            <ion-col *ngFor="let spotted of spotteds | async ">\n                <ion-card >  \n                    <p></p>\n                   \n                    <ion-item >\n                        <button class="botaoLixo" *ngIf="spotted.userId  === chave" ion-button icon-right clear  (click)="removerSpotted(spotted)" >\n                            <ion-icon icon-right name="trash" >                 \n                            </ion-icon>\n                          </button>\n                      <ion-avatar item-start>\n                        <!--     COMENTARIO            <img  round [src]="spotted.userId.photo || \'assets/images/no-photo.jpg\'">\n                        -->\n                        <img  round  [src]="spotted.userPhoto || \'assets/images/no-photo.jpg\'">\n                      </ion-avatar>\n                    \n                      \n                        <h2 (click)="openPerfil(spotted.userId)">{{spotted.userNome}}</h2>\n                        <p>   {{spotted.timestamp | date : \'dd/MM/y H:mm\'  }} \n                        </p>\n                    </ion-item>\n                   \n                    \n                         <img   *ngIf ="spotted.photo" width="218" height="280" src="{{spotted.photo}}">\n                  <!--     COMENTARIO     || amTimeAgo        <img padding [src]="spotted.photo  ||  \'assets/images/download.jpg\'">\n                   -->        <img   *ngIf ="spotted.photo === \'\' " [src]=" \'assets/images/download.jpg\'">\n                   <div class = "card_title"    (click)="irParaPageDetalhesSpotted(spotted)" *ngIf ="spotted.photo === \'\' ">\n                     {{spotted.materia | uppercase }} da {{spotted.curso | capitalize }} na {{spotted.faculdade | uppercase}}<br> Professor(a) - {{spotted.professor}}\n                  </div>\n                  <div class = "card_title"    (click)="irParaPageDetalhesSpotted(spotted)" *ngIf ="spotted.photo !== \'\' ">\n                      {{spotted.materia | uppercase }}<br> Professor(a) - {{spotted.professor}}\n                   </div>\n                 <br>\n                 <div class="card_subtitle" (click)="irParaPageDetalhesSpotted(spotted)" *ngIf ="spotted.photo === \'\' ">\n                <br>  {{spotted.conteudo}}<br>\n                   Nível de dificuldade da matéria : \n                   {{spotted.dificuldadeMateria}}\n                   <br>\n                    Nível de dificuldade do Professor(a): \n                    {{spotted.dificuldadeProfessor}}                   \n                  </div>\n                    <ion-card-content  (click)="irParaPageDetalhesSpotted(spotted)" *ngIf ="spotted.photo" >\n                      <p>{{spotted.conteudo}}</p>\n                    </ion-card-content>\n                  \n                    <ion-row>\n                      <ion-col>\n                        <button ion-button icon-left clear small (click)="deuLike(spotted,false)">\n                          <ion-icon name="thumbs-up"></ion-icon>\n                          <div  *ngIf="spotted.numLikes === 1 ; else customLikes">{{spotted.numLikes}} like</div>\n                          <ng-template #customLikes>\n                            <div>{{spotted.numLikes}} likes</div>\n                              </ng-template>\n                        </button>\n                       \n\n\n                      </ion-col>\n                      <ion-col>\n                        <button ion-button icon-left clear small>\n                          <ion-icon name="text"></ion-icon>\n                          <div *ngIf="spotted.numComentarios === 1 ; else customComentarios" (click)="irParaPageDetalhesSpotted(spotted)" >{{spotted.numComentarios}} comentário</div>\n                          <ng-template #customComentarios >\n                            <div (click)="irParaPageDetalhesSpotted(spotted)">{{spotted.numComentarios}} comentários</div>\n                              </ng-template>\n                        </button>\n                      </ion-col>\n                      <ion-col center text-center>\n                        <ion-note><strong>\n                        {{spotted.timestamp | date : \'dd/MM/y H:mm\'  }}   </strong>\n                        </ion-note>\n                      </ion-col>\n                    </ion-row>\n                  </ion-card>\n            </ion-col>\n    \n          </ion-row>\n  \n        </ion-row>  \n      </ion-list>\n      <ion-infinite-scroll position="bottom" (ionInfinite)="doInfinite($event)">\n        <ion-infinite-scroll-content></ion-infinite-scroll-content>\n  </ion-infinite-scroll>\n      <!-- Parallax Big Image -->\n      <div *ngSwitchCase = "\'conversas\'" background-size id="elastic-header" [ngStyle]="{\'background-image\': \'url(\' + headerImage + \')\'}">\n        <!--Parallax Header Top-->\n        <div parallax-header *ngSwitchCase = "\'conversas\'" >\n          <!--Parallax Subtitle -->\n          <h2 no-margin parallax-subtitle *ngSwitchCase = "\'conversas\'">a galera que você troca idéia</h2>\n          <!--Parallax Title -->\n          <h2 no-margin parallax-title *ngSwitchCase = "\'conversas\'">Conversas</h2>\n        </div>\n      </div>\n      <!--Content-->\n      <ion-grid no-padding *ngSwitchCase = "\'conversas\'">\n        <ion-row >\n          <ion-col col-12>\n            <ion-list no-margin>\n                          <!--eh aqui q vai o ngfor dos itens-->\n              <ion-item item-bcg border no-lines *ngFor = "let chat of chats | async" (click)="onChatOpen(chat)">\n                <!--Content Avatar-->\n                <ion-thumbnail item-start>\n                  <img [src]="chat.photo || \'assets/images/no-photo.jpg\'" alt="legenda">\n                </ion-thumbnail>\n                <!--Content Title-->\n                <h2 no-margin item-title>    {{chat.title}}                </h2>\n                <!--Content Subtitle-->\n                <h3 item-subtitle text-wrap *ngIf="chat.lastMessage ; else customMessage">  \n                    {{chat.timestamp | date : \'dd/MM/y H:mm\'}} - {{chat.lastMessage}} \n                </h3>\n                <ng-template #customMessage>\n                    <h3 item-subtitle text-wrap>\n                      Não há mensagens\n                    </h3>\n                      </ng-template>\n                <!--Content Badge-->\n                <ion-badge class="badge-light" item-end>online</ion-badge>\n              </ion-item>\n              <ion-item item-bcg border no-lines  (click)="openChatBot()">\n                  <!--Content Avatar-->\n                  <ion-thumbnail item-start>\n                    <img [src]="\'assets/images/no-photo.jpg\'" alt="legenda">\n                  </ion-thumbnail>\n                  <!--Content Title-->\n                  <h2 no-margin item-title>Eva</h2>\n                  <!--Content Subtitle-->\n                  <h3 item-subtitle text-wrap >  \n  Vem falar comigo\n                  </h3>\n                  \n                  <!--Content Badge-->\n                  <ion-badge class="badge-light" item-end>online</ion-badge>\n                </ion-item>\n                \n            </ion-list>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n\n  <div *ngSwitchCase = "\'pessoas\'" background-size id="elastic-header" [ngStyle]="{\'background-image\': \'url(\' + headerImage + \')\'}">\n        <!--Parallax Header Top-->\n        <div parallax-header *ngSwitchCase = "\'pessoas\'" >\n          <!--Parallax Subtitle -->\n          <h2 no-margin parallax-subtitle *ngSwitchCase = "\'pessoas\'">a galera que você pode conhecer</h2>\n          <!--Parallax Title -->\n          <h2 no-margin parallax-title *ngSwitchCase = "\'pessoas\'">Pessoas</h2>\n        </div>\n      </div>\n      <!--Content-->\n      <ion-grid no-padding *ngSwitchCase = "\'pessoas\'">\n        <ion-row >\n          <ion-col col-12>\n            <ion-list no-margin>\n              <ion-item item-bcg border no-lines *ngFor = "let user of users | async" (click)="onChatCreate(user)">\n                <!--Content Avatar-->\n                <ion-thumbnail item-start>\n                  <img [src]="user.photo || \'assets/images/no-photo.jpg\'" alt="legenda">\n                </ion-thumbnail>\n                <!--Content Title-->\n                <h2 no-margin item-title>     {{user.name}}\n                  </h2>\n                  <h3 item-subtitle text-wrap >  \n                      {{user.username}}\n                                      </h3>\n                <!--Content Badge-->\n                <ion-badge class="badge-light" item-end>online</ion-badge>\n              </ion-item>\n             \n                \n            </ion-list>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n\n\n\n  \n</div>\n\n<ion-fab left bottom>\n    <button ion-fab color="primary"\n      (click)="openSpotted()"><ion-icon name="add"></ion-icon></button>\n  </ion-fab> \n\n</ion-content>\n'/*ion-inline-end:"C:\Users\Samsung\Documents\AlunoAmigo\b12\src\pages\home\home.html"*/,
+            selector: 'page-home',template:/*ion-inline-start:"C:\Users\Samsung\Documents\AlunoAmigo\b12\src\pages\home\home.html"*/'\n<ion-header>\n <custom-logged-header [title] = "view | capitalize : true"> </custom-logged-header>\n\n <ion-toolbar>\n  <ion-segment [(ngModel)] = "view">\n      <ion-segment-button value = "feed">\n          <ion-icon  name="home" color="primary"></ion-icon>\n              </ion-segment-button>\n    <ion-segment-button value = "conversas">\n        <ion-icon  name="chatboxes" color="primary"></ion-icon>\n      </ion-segment-button>\n    <ion-segment-button value = "pessoas">\n        <ion-icon  name="people" color="primary"></ion-icon>\n      </ion-segment-button>\n  </ion-segment>\n  <ion-searchbar placeholder="Pesquisar"  (ionInput)="filterItems($event)">\n    </ion-searchbar>\n</ion-toolbar>\n            <!--toolbar\n\n<ion-toolbar>\n    <ion-searchbar  (ionInput)="filterItems($event)">\n    </ion-searchbar>\n      \n  </ion-toolbar>\n-->\n\n  </ion-header>\n \n  \n  <ion-content  elastic-header>  \n    <div style="background-color: white" [ngSwitch] = "view" >\n        <div *ngSwitchCase = "\'feed\'" background-size id="elastic-header" [ngStyle]="{\'background-image\': \'url(\' + headerImage + \')\'}">\n            <!--Parallax Header Top-->\n            <div parallax-header *ngSwitchCase = "\'feed\'" >\n              <!--Parallax Subtitle -->\n              <h2 no-margin parallax-subtitle *ngSwitchCase = "\'feed\'"></h2>\n              <!--Parallax Title -->\n              <h2 no-margin parallax-title *ngSwitchCase = "\'feed\'">mais recentes</h2>\n            </div>\n          </div>\n          \n    \n  <ion-list *ngSwitchCase="\'feed\'">\n    <div #stories id="stories"  padding=""></div>\n\n          \n      <!--     COMENTARIO\n        <div id="stories" *ngFor="let story of stories | async " padding class="stories user-icon carousel snapgram">\n  <div class="story" data-id="story.$key" data-photo="story.userPhoto" data-last-updated="story.timestamp">\n    <a>\n      <span class ="img">\n        <u style="background-image:url(story.photo)"></u>\n      </span>\n      <span class="info">\n        <strong>{{story.userNome}}</strong>\n        <span class="time">{{story.timestamp}}</span>\n      </span>\n    </a>\n    <ul class="items">\n      <li class data-id="story.$key">\n        <a href="story.userPhoto" data-link date-time="story.timestamp" data-type="photo" data-length="10"></a>\n      </li>\n    </ul>\n  </div>\n</div>\n      <div id="zuck-modal" class="with-cube with-effects" tabindex="1" style="display:none;">\n       <div id="zuck-modal-content"></div>\n      </div>\n      \n      \n      -->\n      <!--     COMENTARIO            <img  round [src]="spotted.userId.photo || \'assets/images/no-photo.jpg\'">\n                    --> \n                  <ion-row>\n  \n                    <ion-row >\n            <ion-col *ngFor="let spotted of spotteds | async ">\n                <ion-card >  \n                    <p></p>\n                   \n                    <ion-item >\n                        <button class="botaoLixo" *ngIf="spotted.userId  === chave" ion-button icon-right clear  (click)="removerSpotted(spotted)" >\n                            <ion-icon icon-right name="trash" >                 \n                            </ion-icon>\n                          </button>\n                      <ion-avatar item-start>\n                        <!--     COMENTARIO            <img  round [src]="spotted.userId.photo || \'assets/images/no-photo.jpg\'">\n                        -->\n                        <img  round  [src]="spotted.userPhoto || \'assets/images/no-photo.jpg\'">\n                      </ion-avatar>\n                    \n                      \n                        <h2 (click)="openPerfil(spotted.userId)">{{spotted.userNome}}</h2>\n                        <p>   {{spotted.timestamp | date : \'dd/MM/y H:mm\'  }} \n                        </p>\n                    </ion-item>\n                   \n                    \n                         <img   *ngIf ="spotted.photo" width="218" height="280" src="{{spotted.photo}}">\n                  <!--     COMENTARIO     || amTimeAgo        <img padding [src]="spotted.photo  ||  \'assets/images/download.jpg\'">\n                   -->        <img   *ngIf ="spotted.photo === \'\' " [src]=" \'assets/images/download.jpg\'">\n                   <div class = "card_title"    (click)="irParaPageDetalhesSpotted(spotted)" *ngIf ="spotted.photo === \'\' ">\n                     {{spotted.materia | uppercase }} da {{spotted.curso | capitalize }} na {{spotted.faculdade | uppercase}}<br> Professor(a) - {{spotted.professor}}\n                  </div>\n                  <div class = "card_title"    (click)="irParaPageDetalhesSpotted(spotted)" *ngIf ="spotted.photo !== \'\' ">\n                      {{spotted.materia | uppercase }}<br> Professor(a) - {{spotted.professor}}\n                   </div>\n                 <br>\n                 <div class="card_subtitle" (click)="irParaPageDetalhesSpotted(spotted)" *ngIf ="spotted.photo === \'\' ">\n                <br>  {{spotted.conteudo}}<br>\n                   Nível de dificuldade da matéria : \n                   {{spotted.dificuldadeMateria}}\n                   <br>\n                    Nível de dificuldade do Professor(a): \n                    {{spotted.dificuldadeProfessor}}                   \n                  </div>\n                    <ion-card-content  (click)="irParaPageDetalhesSpotted(spotted)" *ngIf ="spotted.photo" >\n                      <p>{{spotted.conteudo}}</p>\n                    </ion-card-content>\n                  \n                    <ion-row>\n                      <ion-col>\n                        <button ion-button icon-left clear small (click)="deuLike(spotted,false)">\n                          <ion-icon name="thumbs-up"></ion-icon>\n                          <div  *ngIf="spotted.numLikes === 1 ; else customLikes">{{spotted.numLikes}} like</div>\n                          <ng-template #customLikes>\n                            <div>{{spotted.numLikes}} likes</div>\n                              </ng-template>\n                        </button>\n                       \n\n\n                      </ion-col>\n                      <ion-col>\n                        <button ion-button icon-left clear small>\n                          <ion-icon name="text"></ion-icon>\n                          <div *ngIf="spotted.numComentarios === 1 ; else customComentarios" (click)="irParaPageDetalhesSpotted(spotted)" >{{spotted.numComentarios}} comentário</div>\n                          <ng-template #customComentarios >\n                            <div (click)="irParaPageDetalhesSpotted(spotted)">{{spotted.numComentarios}} comentários</div>\n                              </ng-template>\n                        </button>\n                      </ion-col>\n                      <ion-col center text-center>\n                        <ion-note><strong>\n                        {{spotted.timestamp | date : \'dd/MM/y H:mm\'  }}   </strong>\n                        </ion-note>\n                      </ion-col>\n                    </ion-row>\n                  </ion-card>\n            </ion-col>\n    \n          </ion-row>\n  \n        </ion-row>  \n      </ion-list>\n      <ion-infinite-scroll position="bottom" (ionInfinite)="doInfinite($event)">\n        <ion-infinite-scroll-content></ion-infinite-scroll-content>\n  </ion-infinite-scroll>\n      <!-- Parallax Big Image -->\n      <div *ngSwitchCase = "\'conversas\'" background-size id="elastic-header" [ngStyle]="{\'background-image\': \'url(\' + headerImage + \')\'}">\n        <!--Parallax Header Top-->\n        <div parallax-header *ngSwitchCase = "\'conversas\'" >\n          <!--Parallax Subtitle -->\n          <h2 no-margin parallax-subtitle *ngSwitchCase = "\'conversas\'">a galera que você troca idéia</h2>\n          <!--Parallax Title -->\n          <h2 no-margin parallax-title *ngSwitchCase = "\'conversas\'">Conversas</h2>\n        </div>\n      </div>\n      <!--Content-->\n      <ion-grid no-padding *ngSwitchCase = "\'conversas\'">\n        <ion-row >\n          <ion-col col-12>\n            <ion-list no-margin>\n                          <!--eh aqui q vai o ngfor dos itens-->\n              <ion-item item-bcg border no-lines *ngFor = "let chat of chats | async" (click)="onChatOpen(chat)">\n                <!--Content Avatar-->\n                <ion-thumbnail item-start>\n                  <img [src]="chat.photo || \'assets/images/no-photo.jpg\'" alt="legenda">\n                </ion-thumbnail>\n                <!--Content Title-->\n                <h2 no-margin item-title>    {{chat.title}}                </h2>\n                <!--Content Subtitle-->\n                <h3 item-subtitle text-wrap *ngIf="chat.lastMessage ; else customMessage">  \n                    {{chat.timestamp | date : \'dd/MM/y H:mm\'}} - {{chat.lastMessage}} \n                </h3>\n                <ng-template #customMessage>\n                    <h3 item-subtitle text-wrap>\n                      Não há mensagens\n                    </h3>\n                      </ng-template>\n                <!--Content Badge-->\n                <ion-badge class="badge-light" item-end>online</ion-badge>\n              </ion-item>\n              <ion-item item-bcg border no-lines  (click)="openChatBot()">\n                  <!--Content Avatar-->\n                  <ion-thumbnail item-start>\n                    <img [src]="\'assets/images/no-photo.jpg\'" alt="legenda">\n                  </ion-thumbnail>\n                  <!--Content Title-->\n                  <h2 no-margin item-title>Eva</h2>\n                  <!--Content Subtitle-->\n                  <h3 item-subtitle text-wrap >  \n  Vem falar comigo\n                  </h3>\n                  \n                  <!--Content Badge-->\n                  <ion-badge class="badge-light" item-end>online</ion-badge>\n                </ion-item>\n                \n            </ion-list>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n\n  <div *ngSwitchCase = "\'pessoas\'" background-size id="elastic-header" [ngStyle]="{\'background-image\': \'url(\' + headerImage + \')\'}">\n        <!--Parallax Header Top-->\n        <div parallax-header *ngSwitchCase = "\'pessoas\'" >\n          <!--Parallax Subtitle -->\n          <h2 no-margin parallax-subtitle *ngSwitchCase = "\'pessoas\'">a galera que você pode conhecer</h2>\n          <!--Parallax Title -->\n          <h2 no-margin parallax-title *ngSwitchCase = "\'pessoas\'">Pessoas</h2>\n        </div>\n      </div>\n      <!--Content-->\n      <ion-grid no-padding *ngSwitchCase = "\'pessoas\'">\n        <ion-row >\n          <ion-col col-12>\n            <ion-list no-margin>\n              <ion-item item-bcg border no-lines *ngFor = "let user of users | async" (click)="onChatCreate(user)">\n                <!--Content Avatar-->\n                <ion-thumbnail item-start>\n                  <img [src]="user.photo || \'assets/images/no-photo.jpg\'" alt="legenda">\n                </ion-thumbnail>\n                <!--Content Title-->\n                <h2 no-margin item-title>     {{user.name}}\n                  </h2>\n                  <h3 item-subtitle text-wrap >  \n                      {{user.username}}\n                                      </h3>\n                <!--Content Badge-->\n                <ion-badge class="badge-light" item-end>{{user.status}}</ion-badge>\n              </ion-item>  \n            </ion-list>\n<br>\n<br>\n<br>\n<br><br>\n<br><br>\n<br><br>\n<br><br>\n<br>\n<br>\n<br>\n<br>\n<br><br>\n<br><br>\n<br><br>\n<br><br>\n<br>\n            <ion-infinite-scroll position="bottom" (ionInfinite)="doInfinite($event)">\n              <ion-infinite-scroll-content></ion-infinite-scroll-content>\n        </ion-infinite-scroll>            \n          </ion-col>\n        </ion-row>\n      </ion-grid>\n\n\n  \n</div>\n\n<ion-fab left bottom>\n    <button ion-fab color="primary"\n      (click)="openSpotted()"><ion-icon name="add"></ion-icon></button>\n  </ion-fab> \n\n</ion-content>\n'/*ion-inline-end:"C:\Users\Samsung\Documents\AlunoAmigo\b12\src\pages\home\home.html"*/,
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_13_ionic_angular__["i" /* MenuController */],
             __WEBPACK_IMPORTED_MODULE_19__ionic_native_geolocation__["a" /* Geolocation */],
@@ -3908,7 +3724,7 @@ var HomePage = (function () {
 
 /***/ }),
 
-/***/ 57:
+/***/ 59:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3921,7 +3737,7 @@ var HomePage = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__base_service__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs__ = __webpack_require__(58);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs__);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -4145,8 +3961,10 @@ var SpottedServiceProvider = (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__base_service__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs__ = __webpack_require__(58);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_crypto_js_crypto_js__ = __webpack_require__(757);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_crypto_js_crypto_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_crypto_js_crypto_js__);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -4172,6 +3990,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 /*
   Generated class for the MessageProvider provider.
 
@@ -4180,7 +3999,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 */
 var MessageServiceProvider = (function (_super) {
     __extends(MessageServiceProvider, _super);
-    //public nbObjects: Subject<any>;
     function MessageServiceProvider(http, af) {
         var _this = _super.call(this) || this;
         _this.http = http;
@@ -4193,21 +4011,33 @@ var MessageServiceProvider = (function (_super) {
         _this.nbObjects.next(_this.nbObjects.getValue() + 2);
         return _this;
     }
+    //public nbObjects: Subject<any>;
+    MessageServiceProvider.getDEcryptedCode = function (pwd, key) {
+        // Decrypt 
+        var bytes = __WEBPACK_IMPORTED_MODULE_6_crypto_js_crypto_js__["AES"].decrypt(pwd.toString(), key);
+        var plaintext = bytes.toString(__WEBPACK_IMPORTED_MODULE_6_crypto_js_crypto_js__["enc"].Utf8);
+        return plaintext;
+    };
+    MessageServiceProvider.getEncryptCode = function (pwd, key) {
+        // Encrypt 
+        var ciphertext = __WEBPACK_IMPORTED_MODULE_6_crypto_js_crypto_js__["AES"].encrypt(pwd, key);
+        return ciphertext.toString();
+    };
     MessageServiceProvider.prototype.loadMoreObjects = function () {
         this.nbObjects.next(this.nbObjects.getValue() + 15);
+    };
+    MessageServiceProvider.prototype.getAllNotificacoes = function (userId1) {
+        return this.af.database.list("/notifications/" + userId1, {
+            query: {
+                orderByChild: 'timestamp',
+            }
+        }).catch(this.handleObservableError);
     };
     MessageServiceProvider.prototype.getMessages = function (userId1, userId2) {
         return this.af.database.list("/messages/" + userId1 + "-" + userId2, {
             query: {
                 orderByChild: 'timestamp',
                 limitToLast: this.nbObjects //limita o numero de mensagens que ira aparecer na tela
-            }
-        }).catch(this.handleObservableError);
-    };
-    MessageServiceProvider.prototype.getAllNotificacoes = function (userId1) {
-        return this.af.database.list("/notifications/" + userId1, {
-            query: {
-                orderByChild: 'timestamp',
             }
         }).catch(this.handleObservableError);
     };
@@ -4220,6 +4050,7 @@ var MessageServiceProvider = (function (_super) {
         }).catch(this.handleObservableError);
     };
     MessageServiceProvider.prototype.create = function (message, listMessages) {
+        // message.text = MessageServiceProvider.getEncryptCode(message.text,'docrjicrjfijrifjrijefirejfifjdc324j2343h24h23u4hu32h4uh3u4h');
         return listMessages.push(message).catch(this.handlePromiseError);
     };
     MessageServiceProvider.prototype.editNotificacao = function (notificacao) {
@@ -4263,7 +4094,7 @@ var Story = (function () {
 
 /***/ }),
 
-/***/ 757:
+/***/ 758:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4281,7 +4112,7 @@ var Mensagem = (function () {
 
 /***/ }),
 
-/***/ 764:
+/***/ 765:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4296,7 +4127,7 @@ var environment = {
 
 /***/ }),
 
-/***/ 765:
+/***/ 766:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4315,7 +4146,7 @@ var Chat = (function () {
 
 /***/ }),
 
-/***/ 766:
+/***/ 767:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4339,7 +4170,7 @@ var Notificacao = (function () {
 
 /***/ }),
 
-/***/ 767:
+/***/ 768:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4368,7 +4199,7 @@ var Spotted = (function () {
 
 /***/ }),
 
-/***/ 768:
+/***/ 769:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4389,7 +4220,7 @@ var Bloqueado = (function () {
 
 /***/ }),
 
-/***/ 769:
+/***/ 770:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4409,7 +4240,7 @@ var Comentario = (function () {
 
 /***/ }),
 
-/***/ 770:
+/***/ 771:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4432,7 +4263,7 @@ var Denuncia = (function () {
 
 /***/ }),
 
-/***/ 772:
+/***/ 773:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4474,7 +4305,7 @@ var ProgressBarComponent = (function () {
 
 /***/ }),
 
-/***/ 773:
+/***/ 774:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4513,13 +4344,13 @@ var CapitalizePipe = (function () {
 
 /***/ }),
 
-/***/ 774:
+/***/ 775:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CustomLoggedHeaderComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__base_component__ = __webpack_require__(428);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__base_component__ = __webpack_require__(430);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_auth_auth_service__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_user_model__ = __webpack_require__(165);
@@ -4579,7 +4410,7 @@ var CustomLoggedHeaderComponent = (function (_super) {
 
 /***/ }),
 
-/***/ 775:
+/***/ 776:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4587,10 +4418,10 @@ var CustomLoggedHeaderComponent = (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_auth_auth_service__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_status_bar__ = __webpack_require__(429);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_splash_screen__ = __webpack_require__(430);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_status_bar__ = __webpack_require__(431);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_splash_screen__ = __webpack_require__(432);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_user_user_service__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_deeplinks__ = __webpack_require__(431);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_deeplinks__ = __webpack_require__(433);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4703,12 +4534,12 @@ var MyApp = (function () {
 
 /***/ }),
 
-/***/ 777:
+/***/ 778:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MessageBoxComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__models_message_model__ = __webpack_require__(420);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__models_message_model__ = __webpack_require__(422);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -4755,21 +4586,21 @@ var MessageBoxComponent = (function () {
 
 /***/ }),
 
-/***/ 778:
+/***/ 779:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserMenuComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_story_photo_story_photo__ = __webpack_require__(156);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__pages_stories_list_stories_list__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__pages_stories_list_stories_list__ = __webpack_require__(82);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_user_model__ = __webpack_require__(165);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__base_component__ = __webpack_require__(428);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__base_component__ = __webpack_require__(430);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_ionic_angular__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_auth_auth_service__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_user_profile_user_profile__ = __webpack_require__(427);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_profissionalLogin_profissionallogin__ = __webpack_require__(432);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_notificacoes_notificacoes__ = __webpack_require__(426);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_user_profile_user_profile__ = __webpack_require__(429);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_profissionalLogin_profissionallogin__ = __webpack_require__(434);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_notificacoes_notificacoes__ = __webpack_require__(428);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -4853,7 +4684,7 @@ var UserMenuComponent = (function (_super) {
 
 /***/ }),
 
-/***/ 779:
+/***/ 780:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4902,7 +4733,7 @@ var UserInfoComponent = (function () {
 
 /***/ }),
 
-/***/ 780:
+/***/ 781:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4912,7 +4743,7 @@ var UserInfoComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_user_user_service__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_spotted_spotted_service__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_spotted_spotted_service__ = __webpack_require__(59);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_denuncia_denuncia_service__ = __webpack_require__(164);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -5018,12 +4849,12 @@ var DenunciasPage = (function () {
 
 /***/ }),
 
-/***/ 781:
+/***/ 782:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BackbuttonProvider; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_app_config__ = __webpack_require__(782);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_app_config__ = __webpack_require__(783);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
@@ -5080,7 +4911,7 @@ var BackbuttonProvider = (function () {
 
 /***/ }),
 
-/***/ 782:
+/***/ 783:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5105,6 +4936,368 @@ var Globals = {
 /***/ }),
 
 /***/ 81:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WelcomePage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__stories_list_stories_list__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__providers_user_user_service__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__story_photo_story_photo__ = __webpack_require__(156);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__signup_signup__ = __webpack_require__(425);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__home_home__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__clienteLogin_clientelogin__ = __webpack_require__(426);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_ionic_angular__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_auth_auth_service__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_forms__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_facebook__ = __webpack_require__(427);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+
+
+
+var WelcomePage = (function () {
+    function WelcomePage(loadingCtrl, app, userService, fb, navCtrl, navParams, alertCtrl, authService, formBuilder) {
+        var _this = this;
+        this.loadingCtrl = loadingCtrl;
+        this.app = app;
+        this.userService = userService;
+        this.fb = fb;
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.alertCtrl = alertCtrl;
+        this.authService = authService;
+        this.formBuilder = formBuilder;
+        this.isLoggedIn = false;
+        // Gradient logic from https://codepen.io/quasimondo/pen/lDdrF
+        // NOTE: I'm not using this logic anymore, but if you want to use somehow, somewhere,
+        // A programmatically way to make a nice rainbow effect, there you go.
+        // NOTE: It probably won't work because it will crash your phone as this method is heavy \o/
+        this.colors = new Array([62, 35, 255], [11, 57, 66], [255, 35, 98], [45, 175, 230], [255, 0, 255], [255, 128, 0]);
+        this.step = 0;
+        // color table indices for:
+        // [current color left,next color left,current color right,next color right]
+        this.colorIndices = [0, 1, 2, 3];
+        // transition speed
+        this.gradientSpeed = 0.00005;
+        this.gradient = '';
+        //FACEBOOK MÉTODO DE VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
+        fb.getLoginStatus()
+            .then(function (res) {
+            ////console.log(res.status);
+            if (res.status === "connect") {
+                _this.isLoggedIn = true;
+            }
+            else {
+                _this.isLoggedIn = false;
+            }
+        })
+            .catch(function (e) { return console.log(e); });
+        var emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        this.signinForm = this.formBuilder.group({
+            email: ['', [__WEBPACK_IMPORTED_MODULE_9__angular_forms__["f" /* Validators */].compose([__WEBPACK_IMPORTED_MODULE_9__angular_forms__["f" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_9__angular_forms__["f" /* Validators */].pattern(emailRegex)])]],
+            password: ['', [__WEBPACK_IMPORTED_MODULE_9__angular_forms__["f" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_9__angular_forms__["f" /* Validators */].minLength(8)]]
+        });
+    }
+    WelcomePage_1 = WelcomePage;
+    WelcomePage.prototype.loginFace = function () {
+        var _this = this;
+        var loading = this.loadingCtrl.create({
+            duration: 50
+        });
+        loading.onDidDismiss(function () {
+            //      this.fb.login(['user_likes','public_profile', 'user_friends', 'email','user_friends','user_gender','user_posts','user_birthday','user_events'])
+            _this.fb.login(['public_profile', 'email'])
+                .then(function (res) {
+                if (res.status === "connected") {
+                    _this.isLoggedIn = true;
+                    _this.getUserDetail(res.authResponse.userID);
+                }
+                else {
+                    _this.isLoggedIn = false;
+                }
+            })
+                .catch(function (e) {
+                alert(e);
+                //console.log('Error logging into Facebook', e)
+            });
+        });
+        loading.present();
+    };
+    WelcomePage.prototype.logout = function () {
+        var _this = this;
+        this.fb.logout()
+            .then(function (res) { return _this.isLoggedIn = false; })
+            .catch(function (e) { return console.log('Error logout from Facebook', e); });
+    };
+    WelcomePage.prototype.getUserDetail = function (userid) {
+        var _this = this;
+        var loading2 = this.loadingCtrl.create({
+            duration: 50
+        });
+        //    this.fb.api("/"+userid+"/?fields=id,email,relationship_status,name,picture.width(320).height(320).as(picture_large),gender",["public_profile"])
+        this.fb.api("/" + userid + "/?fields=id,email,name,picture.width(320).height(320).as(picture_large),gender", ["public_profile"])
+            .then(function (res) {
+            //console.log(res);
+            var formUser = res;
+            var email = res.email;
+            formUser.photo = res.picture_large.data.url;
+            formUser.distance = 100;
+            formUser.username = res.email;
+            formUser.timestampConcordou = Math.floor(Date.now() / 1000);
+            delete formUser.picture_large;
+            _this.userService.emailExists(email).first().subscribe(function (userExists) {
+                if (userExists) {
+                    _this.authService.signinWithEmail({ email: res.email, password: res.id }).then(function (isLogged) {
+                        if (isLogged) {
+                            _this.isLoggedSpottedIn = true;
+                            _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */], {
+                                visao: 'feed'
+                            });
+                        }
+                    }).catch(function (e) {
+                        _this.isLoggedSpottedIn = false;
+                    });
+                }
+                else {
+                    var alert_1 = _this.alertCtrl.create({
+                        title: 'Confirmar cadastro',
+                        message: '<p>Você aceita os termos de uso?</p>',
+                        buttons: [
+                            {
+                                text: 'Sim',
+                                handler: function () {
+                                    var alert2 = _this.alertCtrl.create({
+                                        title: 'Complete o cadastro',
+                                        inputs: [
+                                            {
+                                                name: 'faculdade',
+                                                placeholder: 'Digite sua universidade'
+                                            },
+                                            {
+                                                name: 'curso',
+                                                placeholder: 'Digite o curso'
+                                            }
+                                        ],
+                                        buttons: [
+                                            {
+                                                text: 'Enviar',
+                                                handler: function (data) {
+                                                    formUser.curso = data.curso;
+                                                    formUser.faculdade = data.faculdade;
+                                                    var loading = _this.showLoading();
+                                                    _this.authService.createAuthUser({
+                                                        email: formUser.email,
+                                                        password: formUser.id
+                                                    }).then(function (authState) {
+                                                        delete formUser.id;
+                                                        var uuid = authState.auth.uid;
+                                                        _this.userService.create(formUser, uuid).then(function () {
+                                                            //console.log('usuario cadastrado');
+                                                            loading.dismiss();
+                                                            _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */], {
+                                                                visao: 'feed'
+                                                            });
+                                                        }).catch(function (error) {
+                                                            //console.log(error);
+                                                            _this.showAlert("Erro no cadastro");
+                                                        }).catch(function (error) {
+                                                            _this.showAlert("Erro no cadastro");
+                                                            //console.log(error);
+                                                            //   this.showAlert(error);
+                                                        });
+                                                    });
+                                                }
+                                            }
+                                        ]
+                                    });
+                                    alert2.present();
+                                }
+                            },
+                            {
+                                text: 'Não',
+                                role: 'cancel',
+                                handler: function () {
+                                    console.log('Cancel clicked');
+                                }
+                            }, {
+                                text: 'Ver termos',
+                                handler: function () {
+                                    _this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_0__stories_list_stories_list__["a" /* StoriesListPage */]);
+                                }
+                            }
+                        ]
+                    });
+                    alert_1.present();
+                }
+            });
+            _this.users = res;
+        })
+            .catch(function (e) {
+            //console.log(e);
+        });
+        loading2.present();
+    };
+    WelcomePage.prototype.onSubmit = function () {
+        var _this = this;
+        var loading = this.showLoading();
+        this.authService.signinWithEmail(this.signinForm.value)
+            .then(function (isLogged) {
+            if (isLogged) {
+                if (_this.authService.getEmailVerified() === true) {
+                    _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */], {
+                        visao: 'feed'
+                    });
+                    loading.dismiss();
+                }
+                else {
+                    var alert_2 = _this.alertCtrl.create({
+                        title: 'Confirme o seu email para realizar o login',
+                        buttons: [
+                            {
+                                text: 'OK',
+                                handler: function () {
+                                    loading.dismiss();
+                                }
+                            }
+                        ]
+                    });
+                    alert_2.present();
+                }
+            }
+        }).catch(function (error) {
+            loading.dismiss();
+            _this.showAlert(error);
+        });
+    };
+    WelcomePage.prototype.onHomePage = function () {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */]).then(function (hasAccess) {
+            //console.log('Autorizado : ', hasAccess);
+        }).catch(function (err) {
+            //console.log('Não Autorizado : ', err);
+        });
+    };
+    WelcomePage.prototype.onLogout = function () {
+        this.authService.logout();
+    };
+    WelcomePage.prototype.showAlert = function (message) {
+        this.alertCtrl.create({
+            message: message,
+            buttons: ['OK']
+        }).present();
+    };
+    WelcomePage.prototype.showLoading = function () {
+        var loading = this.loadingCtrl.create({
+            content: 'Carregando...'
+        });
+        loading.present();
+        return loading;
+    };
+    WelcomePage.prototype.ionViewDidLoad = function () {
+        var _this = this;
+        this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */], {
+            visao: 'feed'
+        }).then(function (hasAccess) {
+            if (_this.authService.getEmailVerified() === false) {
+                var alert_3 = _this.alertCtrl.create({
+                    title: 'Confirme o seu email para realizar o login',
+                    buttons: [
+                        {
+                            text: 'OK',
+                            handler: function () {
+                            }
+                        }
+                    ]
+                });
+                alert_3.present();
+                _this.authService.vazar();
+                _this.navCtrl.setRoot(WelcomePage_1);
+            }
+            console.log('Autorizado : ', hasAccess);
+        }).catch(function (err) {
+            console.log('Não Autorizado : ', err);
+        });
+    };
+    WelcomePage.prototype.updateGradient = function () {
+        var _this = this;
+        var c00 = this.colors[this.colorIndices[0]];
+        var c01 = this.colors[this.colorIndices[1]];
+        var c10 = this.colors[this.colorIndices[2]];
+        var c11 = this.colors[this.colorIndices[3]];
+        var istep = 1 - this.step;
+        var r1 = Math.round(istep * c00[0] + this.step * c01[0]);
+        var g1 = Math.round(istep * c00[1] + this.step * c01[1]);
+        var b1 = Math.round(istep * c00[2] + this.step * c01[2]);
+        var color1 = 'rgb(' + r1 + ',' + g1 + ',' + b1 + ')';
+        var r2 = Math.round(istep * c10[0] + this.step * c11[0]);
+        var g2 = Math.round(istep * c10[1] + this.step * c11[1]);
+        var b2 = Math.round(istep * c10[2] + this.step * c11[2]);
+        var color2 = 'rgb(' + r2 + ',' + g2 + ',' + b2 + ')';
+        this.gradient = "-webkit-gradient(linear, left top, right bottom, from(" + color1 + "), to(" + color2 + "))";
+        this.step += this.gradientSpeed;
+        if (this.step >= 1) {
+            this.step %= 1;
+            this.colorIndices[0] = this.colorIndices[1];
+            this.colorIndices[2] = this.colorIndices[3];
+            // pick two new target color indices
+            // do not pick the same as the current one
+            this.colorIndices[1] =
+                (this.colorIndices[1] + Math.floor(1 + Math.random() * (this.colors.length - 1)))
+                    % this.colors.length;
+            this.colorIndices[3] =
+                (this.colorIndices[3] + Math.floor(1 + Math.random() * (this.colors.length - 1)))
+                    % this.colors.length;
+        }
+        setInterval(function () { _this.updateGradient(); }, 10);
+    };
+    WelcomePage.prototype.irCliente = function () {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_5__clienteLogin_clientelogin__["a" /* ClienteLoginPage */]);
+    };
+    WelcomePage.prototype.irCadastro = function () {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_3__signup_signup__["a" /* SignupPage */]);
+    };
+    WelcomePage.prototype.testarPhoto = function () {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__story_photo_story_photo__["a" /* StoryPhotoPage */]);
+    };
+    WelcomePage.prototype.irHome = function () {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */]);
+    };
+    WelcomePage = WelcomePage_1 = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_6__angular_core__["n" /* Component */])({
+            selector: 'page-welcome',template:/*ion-inline-start:"C:\Users\Samsung\Documents\AlunoAmigo\b12\src\pages\welcome\welcome.html"*/'<ion-content padding class="transparent-header">\n\n    <ion-header>\n\n      <ion-navbar>\n\n      </ion-navbar>\n\n    </ion-header>\n\n    <img class="logo" src="assets/img/logo/spotted3.png" />\n\n    \n\n    <div padding>\n\n        <form [formGroup]="signinForm" (ngSubmit) = "onSubmit(); $event.preventDefault()">\n\n            <div class="flex-container">\n\n              <div class="login-form animated fadeInRight">\n\n                <ion-item margin-bottom class="input-login">\n\n                  <ion-input  placeholder="Email" type="text" formControlName = "email"></ion-input>\n\n                </ion-item>\n\n                <ion-item class="input-login">\n\n                  <ion-input  placeholder="Senha" type="password" formControlName = "password"></ion-input>\n\n                </ion-item>\n\n              </div>\n\n          \n\n                    <button ion-button block outline class="login-button"  type = "submit" [disabled]="signinForm.invalid"  color="light" class="login-button">Entrar</button>\n\n            </div>\n\n           \n\n          \n\n          \n\n          \n\n          </form>\n\n          \n\n          \n\n      <button ion-button block outline (click)="irHome()" color="light" class="login-button">Página Inicial</button>\n\n\n\n    </div>\n\n    <div class="strike">\n\n      <span>OU</span>\n\n    </div>\n\n    <button ion-button block clear (click)="loginFace()" color="light" class="login-button"><ion-icon name="logo-facebook"></ion-icon> Login com Facebook</button>\n\n\n\n<!--    <div *ngIf="isLoggedIn; else facebookLogin">\n\n      <h2>Hi, {{users.name}} ({{users.email}})</h2>\n\n      <p>\n\n        Gender: {{users.gender}}\n\n      </p>\n\n      <p>\n\n        <img src="{{users.picture.data.url}}" width="100" alt="{{users.name}}" />\n\n      </p>\n\n      <p>\n\n        <button ion-button icon-right (click)="logout()">\n\n          Logout\n\n        </button>\n\n      </p>\n\n    </div>\n\n    <ng-template #facebookLogin>\n\n      <button ion-button block clear (click)="loginFace()" color="light" class="login-button"><ion-icon name="logo-facebook"></ion-icon> Login with Facebook</button>\n\n    </ng-template>\n\n  --> \n\n  \n\n  </ion-content>\n\n  <ion-footer>\n\n    <ion-toolbar class="footer">\n\n      <div (click)="irCadastro()">\n\n        <span>Ainda não tem conta? <strong>Cadastre-se aqui</strong>.</span>\n\n      </div>\n\n    </ion-toolbar>\n\n  </ion-footer>'/*ion-inline-end:"C:\Users\Samsung\Documents\AlunoAmigo\b12\src\pages\welcome\welcome.html"*/,
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_7_ionic_angular__["h" /* LoadingController */],
+            __WEBPACK_IMPORTED_MODULE_7_ionic_angular__["c" /* App */],
+            __WEBPACK_IMPORTED_MODULE_1__providers_user_user_service__["a" /* UserServiceProvider */],
+            __WEBPACK_IMPORTED_MODULE_10__ionic_native_facebook__["a" /* Facebook */],
+            __WEBPACK_IMPORTED_MODULE_7_ionic_angular__["k" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_7_ionic_angular__["l" /* NavParams */], __WEBPACK_IMPORTED_MODULE_7_ionic_angular__["b" /* AlertController */],
+            __WEBPACK_IMPORTED_MODULE_8__providers_auth_auth_service__["a" /* AuthServiceProvider */], __WEBPACK_IMPORTED_MODULE_9__angular_forms__["a" /* FormBuilder */]])
+    ], WelcomePage);
+    return WelcomePage;
+    var WelcomePage_1;
+}());
+
+//# sourceMappingURL=welcome.js.map
+
+/***/ }),
+
+/***/ 82:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5159,5 +5352,5 @@ var StoriesListPage = (function () {
 
 /***/ })
 
-},[433]);
+},[435]);
 //# sourceMappingURL=main.js.map
