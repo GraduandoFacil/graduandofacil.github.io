@@ -352,7 +352,8 @@ module.exports.metadata =
     "cordova-plugin-badge": "0.8.7",
     "cordova-plugin-local-notification": "0.9.0-beta.2",
     "cordova-android-support-gradle-release": "1.4.4",
-    "ionic-plugin-deeplinks": "1.0.15"
+    "ionic-plugin-deeplinks": "1.0.15",
+    "cordova-plugin-crypt-file": "1.3.3"
 }
 // BOTTOM OF METADATA
 });
