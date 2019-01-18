@@ -336,13 +336,7 @@ module.exports = [
         "runs": true
     },
     {
-        "file": "plugins/es6-promise-plugin/www/promise.js",
-        "id": "es6-promise-plugin.Promise",
-        "pluginId": "es6-promise-plugin",
-        "runs": true
-    },
-    {
-        "file": "plugins/branch-cordova-sdk/www/branch.js",
+        "file": "plugins/branch-cordova-sdk/src/index.js",
         "id": "branch-cordova-sdk.Branch",
         "pluginId": "branch-cordova-sdk",
         "clobbers": [
@@ -368,8 +362,7 @@ module.exports.metadata =
     "cordova-android-support-gradle-release": "1.4.4",
     "ionic-plugin-deeplinks": "1.0.15",
     "cordova-plugin-crypt-file": "1.3.3",
-    "es6-promise-plugin": "3.0.2",
-    "branch-cordova-sdk": "2.5.0"
+    "branch-cordova-sdk": "3.1.5"
 }
 // BOTTOM OF METADATA
 });
