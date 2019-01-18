@@ -17540,10 +17540,6 @@ textarea::-webkit-input-placeholder {
   padding-left: 2px;
 }
 
-textarea:-ms-input-placeholder {
-  padding-left: 2px;
-}
-
 textarea::-ms-input-placeholder {
   padding-left: 2px;
 }
@@ -81303,26 +81299,6 @@ message-box .sender-background {
   background-color: #baf46e;
 }
 
-popo-ver p {
-  margin-top: -10px;
-}
-
-popo-ver .round {
-  width: 50%;
-  border-radius: 100%;
-  margin: 25px auto 0 auto;
-  overflow: hidden;
-}
-
-popo-ver .round2 {
-  border-radius: 100%;
-  overflow: hidden;
-}
-
-popo-ver .custom-background {
-  background-color: #333;
-}
-
 progress-bar .progress-outer {
   width: 96%;
   margin: 10px 2%;
@@ -82540,7 +82516,7 @@ page-welcome .footer-md::before {
 }
 
 page-welcome ion-content {
-  background: linear-gradient(316deg, #3ADF00, #1ddde8, #2b1de8, #0B3861, #dd00f3, #dd00f3);
+  background: linear-gradient(316deg, #4d13d1, #5333ed, #4d05e8, #1f3a93, #3a539b, #446cb3, #4b77be, #4183d7, #2574a9, #1e8bc3, #5c97bf, #2c82c9, #3498db, #22a7f0, #19b5fe, #59abe3, #6bb9f0, #89c4f4, #81cfe0, #c5eff7, #e4f1fe);
   background-size: 1800% 1800%;
   -webkit-animation: rainbow 30s linear infinite;
   animation: rainbow 30s linear infinite;
@@ -82584,10 +82560,11 @@ page-welcome .scroll-content {
 }
 
 page-welcome .logo {
-  width: 50%;
+  width: auto;
   height: auto;
   margin: 0 auto;
-  padding-top: 50px;
+  padding-top: 20px;
+  overflow: scroll;
 }
 
 page-welcome ion-item {

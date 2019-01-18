@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.amigo.universitario.brasil" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Amigo Universitário</name>
-    <description>Uma rede social incrível</description>
-    <author email="imartytk@hotmail.com" href="http://www.spottedbrasil.com.br">Time Spotted Brasil</author>
+<widget id="br.com.graduandofacil" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Graduando Fácil</name>
+    <description>Uma rede social acadêmica</description>
+    <author email="graduandofacil@gmail.com" href="https://www.graduandofacil.com.br">Graduando Fácil</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -11,6 +11,11 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <branch-config>
+        <branch-key value="key_live_kbKeNjzQYWhV35MwBdvdYmhhyscegRZT" />
+        <uri-scheme value="graduandofacil" />
+        <link-domain value="graduandofacil.app.link" />
+    </branch-config>
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
