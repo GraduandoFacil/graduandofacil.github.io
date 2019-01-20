@@ -265,14 +265,6 @@ module.exports = [
         "runs": true
     },
     {
-        "file": "plugins/cordova-plugin-facebook4/www/facebook-browser.js",
-        "id": "cordova-plugin-facebook4.FacebookConnectPluginBrowser",
-        "pluginId": "cordova-plugin-facebook4",
-        "clobbers": [
-            "facebookConnectPlugin"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-badge/www/badge.js",
         "id": "cordova-plugin-badge.Badge",
         "pluginId": "cordova-plugin-badge",
@@ -342,6 +334,14 @@ module.exports = [
         "clobbers": [
             "Branch"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-facebook4/www/facebook-browser.js",
+        "id": "cordova-plugin-facebook4.FacebookConnectPluginBrowser",
+        "pluginId": "cordova-plugin-facebook4",
+        "clobbers": [
+            "facebookConnectPlugin"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -356,13 +356,13 @@ module.exports.metadata =
     "cordova-plugin-camera-preview": "0.10.0",
     "cordova-plugin-camera": "4.0.3",
     "cordova-plugin-compat": "1.2.0",
-    "cordova-plugin-facebook4": "1.7.4",
     "cordova-plugin-badge": "0.8.7",
     "cordova-plugin-local-notification": "0.9.0-beta.2",
     "cordova-android-support-gradle-release": "1.4.4",
     "ionic-plugin-deeplinks": "1.0.15",
     "cordova-plugin-crypt-file": "1.3.3",
-    "branch-cordova-sdk": "3.1.5"
+    "branch-cordova-sdk": "3.1.5",
+    "cordova-plugin-facebook4": "1.7.4"
 }
 // BOTTOM OF METADATA
 });
